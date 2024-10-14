@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 
-
 export default function Home() {
   return (
-    <Button>
-      This is authenticated route page
-    </Button>
+    <p>
+      This is an authenticated route
+    </p>
   );
 }
