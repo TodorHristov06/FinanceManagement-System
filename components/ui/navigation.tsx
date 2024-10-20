@@ -1,6 +1,6 @@
 "use client";
 
-export const Naviagion = () => {
+export const Navigation = () => {
     return (
         <div>
             Navigation
