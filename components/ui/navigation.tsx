@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { NavButton } from "@/components/ui/nav-button";
 import { useState } from "react";
+import { Menu } from "lucide-react";
 import {Sheet, SheetContent, SheetTrigger, } from "@/components/ui/sheet"
 import {useMedia} from "react-use"
 import {Button} from "@/components/ui/button"
@@ -46,10 +47,14 @@ export const Navigation = () => {
         return (
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger>
-                    <Button>
-
+                    <Button variant="outline" size="sm" className="font-normal bg-white/10 hover:text-white border-none 
+                    focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-white focus:bg-white/30 transition">
+                        <Menu className="size-4"/>
                     </Button>
                 </SheetTrigger>
+                <SheetContent>
+                    
+                </SheetContent>
             </Sheet>
         )
     }
