@@ -1,5 +1,6 @@
 import { HeaderLogo } from "@/components/ui/header-logo";
 import { Navigation } from "@/components/ui/navigation";
+import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 
 export const Header = () => {
     return (
@@ -10,6 +11,7 @@ export const Header = () => {
                         <HeaderLogo />
                         <Navigation />
                     </div>
+                    <UserButton afterSignOutUrl="/"/>
                 </div>
             </div>
         </header>
