@@ -13,7 +13,12 @@ export const Header = () => {
                         <Navigation />
                     </div>
                     <ClerkLoaded>
-                    <UserButton afterSignOutUrl="/"/>
+                    <UserButton afterSignOutUrl="/"
+                    appearance={{
+                        layout: {
+                            unsafe_disableDevelopmentModeWarnings: true, 
+                        },
+                    }} />
                     </ClerkLoaded>
                     <ClerkLoading>
                         <Loader2 className="size-8 animate-spin text-slate-400"/>
