@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { NavButton } from "@/components/ui/nav-button";
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Ghost, Menu } from "lucide-react";
 import {Sheet, SheetContent, SheetTrigger, } from "@/components/ui/sheet"
 import {useMedia} from "react-use"
 import {Button} from "@/components/ui/button"
@@ -38,6 +38,8 @@ export const Navigation = () => {
     const pathname = usePathname();
     const isMobile = useMedia("(max-width: 1024px)", false);
 
+    //console.log({ isMobile})
+
     const onClick = (href: string) => {
         router.push(href);
         setIsOpen(false);
@@ -52,9 +54,15 @@ export const Navigation = () => {
                         <Menu className="size-4"/>
                     </Button>
                 </SheetTrigger>
-                <SheetContent>
-                    
-                </SheetContent>
+                <SheetContent side="left" className="px-2">
+                    <nav className="flex flex-col gap-y-2 pt-6">
+                        {routes.map((route) => (
+                            <Button key={route.href} variant={route.href === pathname ? "secondary" : "ghost"} onClick={() => onClick(route.href)}>
+                                {route.label}
+                            </Button>
+                        ))}
+                    </nav>
+                </SheetContent> 
             </Sheet>
         )
     }
