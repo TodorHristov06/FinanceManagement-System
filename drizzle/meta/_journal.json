@@ -8,6 +8,13 @@
       "when": 1729626614345,
       "tag": "0000_milky_titania",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729628281321,
+      "tag": "0001_abandoned_goblin_queen",
+      "breakpoints": true
     }
   ]
 }
