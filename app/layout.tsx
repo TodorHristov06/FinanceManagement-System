@@ -4,6 +4,7 @@ import { clerkMiddleware } from "@clerk/nextjs/server";
 import "./globals.css";
 import { ClerkLoaded } from "@clerk/nextjs";
 import { ClerkProvider } from "@clerk/nextjs";
+import { QueryProvider } from "@/providers/query-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <QueryProvider>
+          {children}
+          </QueryProvider>
+        </body>
       </html>
     </ClerkProvider>
   );
