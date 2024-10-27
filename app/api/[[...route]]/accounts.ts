@@ -1,5 +1,6 @@
-import { Hono } from "hono"
-import { db } from "@/db/drizzle"
+import { Hono } from "hono";
+import { db } from "@/db/drizzle";
+import { createId} from "@paralleldrive/cuid2";
 import { accounts, insertAccountSchema } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { eq } from "drizzle-orm";
@@ -39,7 +40,7 @@ const app = new Hono()
             }
 
             const data = await db.insert(accounts).values({
-                id: "test",
+                id: createId(),
                 userId: auth.userId,
                 ...values,
             })
