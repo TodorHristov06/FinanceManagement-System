@@ -29,7 +29,6 @@ const app = new Hono()
         clerkMiddleware(),
         zValidator("json", insertAccountSchema.pick({
             name: true,
-
         })),
         async(c) => {
             const auth = getAuth(c);
