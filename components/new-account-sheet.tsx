@@ -3,14 +3,16 @@ import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/
 export const NewAccountSheet = () => {
     return (
         <Sheet open>
-            <SheetContent>
+            <SheetContent className="space-y-4">
                 <SheetHeader>
-                    <SheetTitle>Create a new account</SheetTitle>
+                    <SheetTitle>
+                        New account
+                    </SheetTitle>
                     <SheetDescription>
-                        Make changes to your profile here. Click save when you're done.
+                        Create a new account to track your transactions.
                     </SheetDescription>
                 </SheetHeader>
             </SheetContent>
         </Sheet> 
-    )
-}
+    );
+};
