@@ -1,10 +1,9 @@
 import { useNewAccounts } from "@/features/accounts/hooks/use-new-accounts";
 import { AccountForm } from "@/features/accounts/components/account-form";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
-import { FormValue } from "hono/types";
 import { insertAccountSchema } from "@/db/schema";
 import { z } from "zod";
-
+import { useCreateAccount} from "@/features/accounts/api/use-create-account";   
 const formSchema = insertAccountSchema.pick({
     name: true,
 })
@@ -14,9 +13,11 @@ type FormValues = z.input<typeof formSchema>
 
 export const NewAccountSheet = () => {
     const { isOpen, onClose } = useNewAccounts();
+
+    const mutation = useCreateAccount();
     
     const onSubmit = (values: FormValues) => {
-        console.log({ values });
+        mutation.mutate(values);
     };
     return (
         <Sheet open={isOpen} onOpenChange={onClose}>
