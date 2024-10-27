@@ -25,4 +25,6 @@ export const useCreateAccount = () => {
             toast.error("Failed to create account");
         },
     })
+
+    return mutation;
 }
