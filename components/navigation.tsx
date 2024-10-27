@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { NavButton } from "@/components/ui/nav-button";
+import { NavButton } from "@/components/nav-button";
 import { useState } from "react";
 import { Ghost, Menu } from "lucide-react";
 import {Sheet, SheetContent, SheetTrigger, } from "@/components/ui/sheet"
