@@ -19,6 +19,9 @@ export const useCreateAccount = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["accounts"] });
-        }
+        },
+        onError: () => {
+
+        },
     })
 }
