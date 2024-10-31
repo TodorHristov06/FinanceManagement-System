@@ -1,7 +1,15 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 const AccountsPage = () => {
     return (
         <div>
-            Accounts Page
+            <Card>
+                <CardHeader>
+                    <CardTitle>
+                        Accounts Page  
+                    </CardTitle>
+                </CardHeader>
+            </Card>
         </div>
     )
 }
