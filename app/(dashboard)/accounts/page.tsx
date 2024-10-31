@@ -7,14 +7,15 @@ import { Plus } from "lucide-react";
 
 const AccountsPage = () => {
     const newAccounts = useNewAccounts();
+    
     return (
-        <div>
+        <div className="max-w-screen-2xl mx-auto">
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">
                         Accounts Page  
                     </CardTitle>
-                    <Button size="sm">
+                    <Button onClick={newAccounts.onOpen} size="sm">
                         <Plus className="size-4 mr-2"/>
                         Add new
                     </Button>
