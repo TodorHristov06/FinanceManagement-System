@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 
 const AccountsPage = () => {
+    const newAccounts = useNewAccounts(); 
     return (
         <div>
             <Card className="border-none drop-shadow-sm">
@@ -12,7 +13,7 @@ const AccountsPage = () => {
                     </CardTitle>
                     <Button size="sm">
                         <Plus className="size-4 mr-2"/>
-                            Add new
+                        Add new
                     </Button>
                 </CardHeader>
             </Card>
