@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNewAccounts } from "@/features/accounts/hooks/use-new-accounts";
 import { Plus } from "lucide-react";
 
 const AccountsPage = () => {
-    const newAccounts = useNewAccounts(); 
+    const newAccounts = useNewAccounts();
     return (
         <div>
             <Card className="border-none drop-shadow-sm">
