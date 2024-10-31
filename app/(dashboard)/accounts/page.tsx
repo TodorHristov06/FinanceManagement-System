@@ -10,10 +10,9 @@ const AccountsPage = () => {
                     <CardTitle className="text-xl line-clamp-1">
                         Accounts Page  
                     </CardTitle>
-                    <Button>
-                        <Plus>
+                    <Button size="sm">
+                        <Plus className="size-4 mr-2"/>
                             Add new
-                        </Plus>
                     </Button>
                 </CardHeader>
             </Card>
