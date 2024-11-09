@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Atlas Vault
 
-## Getting Started
 
-First, run the development server:
+>Atlas Vault, inspired by Ayn Rand's Atlas Shrugged, symbolizes the strength and resilience required to manage the weight of one’s own world—here represented by personal finances and data security. Like Atlas bearing the weight of the heavens, this application empowers you to take control of your financial records, providing a structured, secure space to navigate and organize financial complexities.
+Starting Atlas Vault could reflect a passion for creating tools that provide clarity, self-sufficiency, and streamlined data handling, empowering users to shoulder and master their own financial "vault."
+>
+A web-based application for managing fynances with features like account creation, editing, and deletion. This project utilizes React, Next.js, Zustand, and Hono.js to provide a seamless user experience for managing financial accounts.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- **Account Management**: Create, read, edit, and delete accounts.
+- **Real-time Data**: Fetch and update account data in real time with React Query.
+- **Confirmation Dialog**: Ensure accidental deletions are prevented with a confirmation dialog.
+- **Modular Components**: Reusable components for account actions and forms.
+- **Optimistic UI Updates**: Provide immediate feedback to users when modifying account data.
+- **Account Authentication**: Ensures robust security and protection for user accounts, safeguarding user data and enhancing their overall experience.
+- **Data Visualization with Charts**: Offers visually engaging charts to clearly illustrate user expenses, making financial insights easily accessible and understandable.
+
+## Tech Stack
+
+>- **Frontend**:
+  - React
+  - Next.js (API Routes, React Query, Zustand for state management)
+  - ShadCN for UI components
+  - Lucide React for icons
+  - TypeScript
+  - Clerk for authentication 
+>- **Backend**:
+  - Hono.js (for API communication)
+  - Drizzle ORM and Neon DB for database interactions
+
+## Setup and Installation
+### Prerequisites
+Ensure you have the following installed:
+
+- Node.js (v16 or higher)
+- Bun
+## Installation
+### Clone the Repository:
+
+bash
 ```
+git clone https://github.com/yourusername/atlas-vault.git
+cd atlas-vault
+```
+Install Dependencies:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+bun install
+```
+Set Up Environment Variables: Create an .env.local file in the root directory. Fill in the necessary environment variables for database and authentication configuration:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+DATABASE_URL=your_database_url
+NEXTAUTH_SECRET=your_secret_key
+```
+Start the Development Server:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+bun run dev
+```
+Open your browser and navigate to http://localhost:3000 to view the app.
