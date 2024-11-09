@@ -113,7 +113,7 @@ const app = new Hono()
         }
     )
     .patch(
-        "/:id",
+        "/:id", 
         clerkMiddleware(),
         zValidator(
             "param", 

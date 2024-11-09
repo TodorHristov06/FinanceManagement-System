@@ -1,24 +1,36 @@
-import {  useQuery } from "@tanstack/react-query";
+import { InferRequestType, InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { client} from "@/lib/hono";
 
-import { client } from "@/lib/hono";
+type ResponseType = InferResponseType<typeof client.api.accounts[":id"]["$patch"]>;
+type RequestType = InferRequestType<typeof client.api.accounts[":id"]["$patch"]>["json"];
 
-export const useGetAccount = (id?: string) => {
-    const query = useQuery({
-        enabled: !!id,
-        queryKey: ["account", { id }],
-        queryFn: async() => {
-            const response = await client.api.accounts[":id"].$get({
-                param: { id },
-            })
+export const useEditAccount = (id?: string) => {
+    const queryClient = useQueryClient();
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch account");
-            }
-
-            const { data } = await response.json();
-            return data;
-        }
+    const mutation = useMutation<
+        ResponseType,
+        Error,
+        RequestType
+    >({
+        mutationFn: async (json) => {
+            const response = await client.api.accounts[":id"]["$patch"]({ 
+                param: { id }, 
+                json 
+            });
+            return await response.json();
+        },
+        onSuccess: () => {
+            toast.success("Account updated");
+            queryClient.invalidateQueries({ queryKey: ["account", { id }] });
+            queryClient.invalidateQueries({ queryKey: ["accounts"] });
+            //TODO: invalidate summary and transactions
+        },
+        onError: () => {
+            toast.error("Failed to edit account");
+        },
     })
 
-    return query;
+    return mutation;
 }
