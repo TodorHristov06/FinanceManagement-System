@@ -40,20 +40,15 @@ Ensure you have the following installed:
 
 bash
 ```
-git clone https://github.com/yourusername/atlas-vault.git
-cd atlas-vault
+git clone https://github.com/TodorHristov06/FinanceManagement-System
+cd finance-system
 ```
 Install Dependencies:
 
 ```
 bun install
 ```
-Set Up Environment Variables: Create an .env.local file in the root directory. Fill in the necessary environment variables for database and authentication configuration:
 
-```
-DATABASE_URL=your_database_url
-NEXTAUTH_SECRET=your_secret_key
-```
 Start the Development Server:
 
 ```
