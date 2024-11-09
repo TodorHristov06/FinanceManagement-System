@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
 import { Edit, MoreHorizontal } from "lucide-react";
 
 type Props = {
