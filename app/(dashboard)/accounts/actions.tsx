@@ -9,6 +9,8 @@ type Props = {
     id: string
 }
 export const Actions = ({id}: Props) => {
+    const { onOpen } = useOpenAccount();
+
     return (
         <>
             <DropdownMenu>
@@ -18,7 +20,7 @@ export const Actions = ({id}: Props) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem disabled={false} onClick={() => {}}>
+                    <DropdownMenuItem disabled={false} onClick={() => onOpen(id)}>
                         <Edit className="size-4 mr-2"/>
                         Edit
                     </DropdownMenuItem>
