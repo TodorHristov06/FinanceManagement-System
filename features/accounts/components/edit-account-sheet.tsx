@@ -5,7 +5,8 @@ import { useGetAccount } from "@/features/accounts/api/use-get-account";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import { insertAccountSchema } from "@/db/schema";
 import { Loader2 } from "lucide-react";
-import { useEditAccount } from "../api/use-edit-account";
+import { useEditAccount } from "@/features/accounts/api/use-edit-account";
+import { useDeleteAccount } from "@/features/accounts/api/use-delete-account";
 
 
 
@@ -21,8 +22,9 @@ export const EditAccountSheet = () => {
 
     const accountQuery = useGetAccount(id)
     const editMutation = useEditAccount(id)
+    const deleteMutation = useDeleteAccount(id)
 
-    const isPending = editMutation.isPending
+    const isPending = editMutation.isPending || deleteMutation.isPending
 
     const isLoading = accountQuery.isLoading
     
@@ -62,6 +64,7 @@ export const EditAccountSheet = () => {
                             onSubmit={onSubmit} 
                             disabled={isPending} 
                             defaultValues={defaultValues}
+                            onDelete={() => deleteMutation.mutate()}
                         />
                     )
                 }  
