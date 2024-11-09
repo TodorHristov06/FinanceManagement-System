@@ -55,7 +55,12 @@ export const EditAccountSheet = () => {
                             <Loader2 className="size-4 text-muted-foreground animate-spin" />
                         </div> 
                     ) : (
-                        <AccountForm onSubmit={onSubmit} disabled={mutation.isPending} defaultValues={defaultValues}/>
+                        <AccountForm 
+                            id={id}
+                            onSubmit={onSubmit} 
+                            disabled={mutation.isPending} 
+                            defaultValues={defaultValues}
+                        />
                     )
                 }
                     
