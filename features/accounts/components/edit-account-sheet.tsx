@@ -43,10 +43,10 @@ export const EditAccountSheet = () => {
             <SheetContent className="space-y-4">
                 <SheetHeader>
                     <SheetTitle>
-                        New account
+                        Edit account
                     </SheetTitle>
                     <SheetDescription>
-                        Create a new account to track your transactions.    
+                        Edit an existing account 
                     </SheetDescription>
                 </SheetHeader>
                 {isLoading 
