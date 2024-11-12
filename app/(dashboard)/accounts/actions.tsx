@@ -26,7 +26,8 @@ export const Actions = ({id}: Props) => {
 
     return (
         <>
-            <ConfirmDialog/> // Render confirmation dialog
+            {/*Render confirmation dialog*/}
+            <ConfirmDialog/>  
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="size-8 p-0">
