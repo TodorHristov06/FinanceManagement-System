@@ -1,3 +1,4 @@
+// Import required libraries and modules
 import { Hono } from "hono";
 import { db } from "@/db/drizzle";
 import { createId} from "@paralleldrive/cuid2";
@@ -7,17 +8,20 @@ import { eq, and, inArray } from "drizzle-orm";
 import {zValidator} from "@hono/zod-validator";
 import { z } from "zod";
 
+// Initialize Hono app
 const app = new Hono()
+
+    // GET request to fetch all user accounts
     .get(
         "/",
-        clerkMiddleware(),
+        clerkMiddleware(), // Auth check
          async (c) => {
             const auth = getAuth(c);
 
             if(!auth?.userId){
                 return c.json({ error: "Unauthorized" }, 401);
             }
-            
+            // Retrieve accounts for the authenticated user 
             const data = await db
                 .select({
                     id: accounts.id,
@@ -27,6 +31,7 @@ const app = new Hono()
             .where(eq(accounts.userId, auth.userId));
             return c.json({ data });
     })
+    // GET request to fetch a single account by ID
     .get(
         "/:id",
         zValidator("param", z.object({
@@ -44,7 +49,7 @@ const app = new Hono()
             if (!auth?.userId) {
                 return c.json({ error: "Unauthorized" }, 401);
             }
-
+            // Retrieve specific account for the user by ID
             const [data] = await db
                 .select({
                     id: accounts.id,
@@ -59,6 +64,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+     // POST request to create a new account
     .post(
         "/",
         clerkMiddleware(),
@@ -72,7 +78,7 @@ const app = new Hono()
             if(!auth?.userId){
                 return c.json({ error: "Unauthorized" }, 401);
             }
-
+            // Insert new account for the user
             const [data] = await db.insert(accounts).values({
                 id: createId(),
                 userId: auth.userId,
@@ -80,13 +86,14 @@ const app = new Hono()
             }).returning(); 
             return c.json({ data })
     })
+    // POST request for bulk deletion of accounts
     .post(
         "/bulk-delete",
         clerkMiddleware(),
         zValidator(
             "json",
             z.object({
-                ids: z.array(z.string()),
+                ids: z.array(z.string()), // Array of account IDs to delete
             }),
         ),
         async(c) => {
@@ -96,7 +103,7 @@ const app = new Hono()
             if(!auth?.userId){
                 return c.json({ error: "Unauthorized" }, 401);
             }
-
+            // Delete multiple accounts by IDs
             const data = await db
                 .delete(accounts)
                 .where(
@@ -112,6 +119,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // PATCH request to update an account by ID
     .patch(
         "/:id", 
         clerkMiddleware(),
@@ -139,7 +147,7 @@ const app = new Hono()
             if (!auth?.userId) {
                 return c.json({ error: "Unauthorized" }, 401);
             }
-
+            // Update specific account by ID
             const [data] = await db
                 .update(accounts)
                 .set(values)
@@ -155,6 +163,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // DELETE request to remove a single account by ID
     .delete(
         "/:id", 
         clerkMiddleware(),
@@ -175,7 +184,7 @@ const app = new Hono()
             if (!auth?.userId) {
                 return c.json({ error: "Unauthorized" }, 401);
             }
-
+            // Delete specific account by ID
             const [data] = await db
                 .delete(accounts)
                 .where(
