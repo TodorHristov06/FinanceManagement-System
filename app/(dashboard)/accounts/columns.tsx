@@ -1,18 +1,20 @@
-"use client"
+"use client"; // Mark this component to be rendered on the client side
 
-import { Button } from "@/components/ui/button"
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"       
-import { InferResponseType } from "hono"
-import { client } from "@/lib/hono"
-import { Actions } from "./actions"
+import { Button } from "@/components/ui/button"; // Import Button component from UI library
+import { ColumnDef } from "@tanstack/react-table"; // Import ColumnDef for defining table columns
+import { ArrowUpDown } from "lucide-react"; // Import sorting icon
+import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox component from UI library       
+import { InferResponseType } from "hono"; // Type inference for the API response
+import { client } from "@/lib/hono"; // Import client for API communication
+import { Actions } from "./actions"; // Import Actions component for each row
 
+// Define response type from API to infer account data shape
 export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"] [0]
 
+// Define table columns
 export const columns: ColumnDef<ResponseType>[] = [
   {
-    id: "select",
+    id: "select", // Define the 'select' column for selecting rows
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -30,22 +32,22 @@ export const columns: ColumnDef<ResponseType>[] = [
         aria-label="Select row"
       />
     ),
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: false, // Disable sorting for this column
+    enableHiding: false, // Disable hiding for this column
   },
   {
-    accessorKey: "name",
+    accessorKey: "name", // Define column for account name
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 h-4 w-4" /> {/* Sorting icon */}
         </Button>
       )
     },
   },
   {
-    id: "actions",
-    cell: ({ row }) => <Actions id={row.original.id} />
+    id: "actions", // Define the 'actions' column for each row
+    cell: ({ row }) => <Actions id={row.original.id} /> // Render the Actions component with the account ID
   }
 ]
