@@ -1,25 +1,25 @@
-"use client"
+"use client"; // Mark this component to be rendered on the client side
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Plus } from "lucide-react";
-import { columns } from "./columns";
-import { DataTable } from "@/components/data-table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete";
-import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
-import { useNewAccounts } from "@/features/accounts/hooks/use-new-accounts";
+import { Button } from "@/components/ui/button"; // Import Button component from UI library
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import Card components for layout
+import { Loader2, Plus } from "lucide-react"; // Import icons for loading and adding
+import { columns } from "./columns"; // Import column definitions for the table
+import { DataTable } from "@/components/data-table"; // Import DataTable component for displaying accounts
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component for loading state
+import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete"; // Import bulk delete hook
+import { useGetAccounts } from "@/features/accounts/api/use-get-accounts"; // Import hook for fetching accounts
+import { useNewAccounts } from "@/features/accounts/hooks/use-new-accounts"; // Import hook for creating new accounts
 
 
 const AccountsPage = () => {
-    const newAccounts = useNewAccounts();
-    const deleteAccount = useBulkDeleteAccounts();
-    const accountsQuery = useGetAccounts();
-    const accounts = accountsQuery.data || [];
+    const newAccounts = useNewAccounts(); // Hook to manage new account creation
+    const deleteAccount = useBulkDeleteAccounts(); // Hook to handle bulk delete of accounts
+    const accountsQuery = useGetAccounts(); // Hook to fetch account data
+    const accounts = accountsQuery.data || []; // Use fetched accounts data or empty array
 
     const isDisabled =
         accountsQuery.isLoading ||
-        deleteAccount.isPending;
+        deleteAccount.isPending; // Disable actions if data is loading or deletion is in progress
 
     if (accountsQuery.isLoading) {
         return(
