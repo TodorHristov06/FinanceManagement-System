@@ -55,8 +55,8 @@ const AccountsPage = () => {
                         filterKey="email" 
                         columns={columns} 
                         data={accounts} 
-                        onDelete={(row: any[]) => {
-                            const ids = row.map((r: any) => r.original.id); 
+                        onDelete={(row) => {
+                            const ids = row.map((r) => r.original.id); 
                             deleteAccount.mutate({ids});
                         }}
                         disabled={isDisabled}
@@ -64,7 +64,7 @@ const AccountsPage = () => {
                 </CardContent>
             </Card>
         </div>
-    )
+    )   
 }
 
 export default AccountsPage;

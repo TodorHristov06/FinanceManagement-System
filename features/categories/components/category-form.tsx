@@ -65,7 +65,8 @@ export const CategoryForm = ({
                             <Input 
                             disabled={disabled} // Disables the input if the disabled prop is true
                             placeholder="e.g Food, Travel, etc." 
-                            {...field}/> // Connecting the input with react-hook-form's field
+                            //Connecting the input with react-hook-form's field
+                            {...field}/> 
                         </FormControl>
                         <FormMessage /> {/* Display validation errors */}
                     </FormItem>

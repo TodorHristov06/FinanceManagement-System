@@ -56,8 +56,8 @@ const CategoriesPage = () => {
                         filterKey="name" 
                         columns={columns} 
                         data={categories} 
-                        onDelete={(row: any[]) => {
-                            const ids = row.map((r: any) => r.original.id); 
+                        onDelete={(row) => {
+                            const ids = row.map((r) => r.original.id); 
                             deleteCategories.mutate({ids});
                         }}
                         disabled={isDisabled}
