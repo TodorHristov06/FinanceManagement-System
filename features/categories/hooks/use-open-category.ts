@@ -10,7 +10,7 @@ type OpenCategoryState = {
 };
 
 // Creating a custom hook using `zustand` to manage the state of the Edit Category sheet
-export const useOpeCategory = create<OpenCategoryState>((set) => ({
+export const useOpenCategory = create<OpenCategoryState>((set) => ({
     id: undefined, // Initial state: no Category ID is selected
     isOpen: false, // Initial state: the sheet is closed
     onOpen: (id: string ) => set({ isOpen: true, id}), // Open the sheet and set the Category ID
