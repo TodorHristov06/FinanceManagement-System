@@ -9,7 +9,7 @@ import { client } from "@/lib/hono"; // Import client for API communication
 import { Actions } from "./actions"; // Import Actions component for each row
 
 // Define response type from API to infer account data shape
-export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"] [0]
+export type ResponseType = InferResponseType<typeof client.api.categories.$get, 200>["data"] [0]
 
 // Define table columns
 export const columns: ColumnDef<ResponseType>[] = [
