@@ -1,17 +1,21 @@
-    import { Hono } from "hono"
-    import { handle } from "hono/vercel"
-    import accounts from "./accounts";
+// Import necessary modules
+import { Hono } from "hono";
+import { handle } from "hono/vercel";
+import accounts from "./accounts";
 
+export const runtime = "edge"; // Set runtime to Vercel Edge
 
-    export const runtime = "edge"
+// Initialize Hono app with a base path
+const app = new Hono().basePath("/api");
 
-    const app = new Hono().basePath("/api");    
+// Route all requests to /accounts to the accounts module
+const routes = app.route("/accounts", accounts);
 
-    const routes = app.route("/accounts", accounts);
+// Export handlers for each HTTP method
+export const GET = handle(app);
+export const POST = handle(app);
+export const PATCH = handle(app);
+export const DELETE = handle(app);
 
-    export const GET = handle(app);
-    export const POST = handle(app);
-    export const PATCH = handle(app);
-    export const DELETE = handle(app);
-
-    export type AppType = typeof routes;
+// Define AppType for type-checking routes
+export type AppType = typeof routes;
