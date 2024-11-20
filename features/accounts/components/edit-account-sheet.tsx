@@ -10,7 +10,7 @@ import { useEditAccount } from "@/features/accounts/api/use-edit-account";  // C
 import { useDeleteAccount } from "@/features/accounts/api/use-delete-account";  // Custom hook for deleting account
 import { useConfirm } from "@/hooks/use-confirm";  // Custom hook for confirmation dialogs
 
-// Defining the schema for the form, only picking 'name' from the insertAccountSchem
+// Defining the schema for the form, only picking 'name' from the insertAccountSchema
 const formSchema = insertAccountSchema.pick({
     name: true,
 })
