@@ -20,4 +20,5 @@ export const categories = pgTable("categories", {
     userId: text("user_id").notNull(), // User ID column, text type, cannot be null
 });
 
+// Creating a Zod schema for validating data when inserting into the 'categories' table
 export const insertCategorySchema = createInsertSchema(categories)
