@@ -52,7 +52,6 @@ export const CategoryForm = ({
         // The Form component is a wrapper for the react-hook-form
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
-                {/* Field for category name */}
                 <FormField 
                 name="name" 
                 control={form.control} 
@@ -63,21 +62,18 @@ export const CategoryForm = ({
                         </FormLabel>
                         <FormControl>
                             <Input 
-                            disabled={disabled} // Disables the input if the disabled prop is true
+                            disabled={disabled}
                             placeholder="e.g Food, Travel, etc." 
-                            //Connecting the input with react-hook-form's field
                             {...field}/> 
                         </FormControl>
-                        <FormMessage /> {/* Display validation errors */}
+                        <FormMessage /> 
                     </FormItem>
                 )}/>
-                {/* Submit button for creating or saving an category */}
                 <Button className="w-full" disabled={disabled}>
                     {id ? "Save changes" : "Create category"}
                 </Button>
-                {/* Delete button for deleting the category, only visible if there's an ID */}
                 {!!id && (<Button type="button" disabled={disabled} onClick={handleDelete} className="w-full" variant="outline">
-                    <Trash className="size-4 mr-2"/> {/* Trash icon */}
+                    <Trash className="size-4 mr-2"/> 
                     Delete category
                 </Button>)}
             </form>
