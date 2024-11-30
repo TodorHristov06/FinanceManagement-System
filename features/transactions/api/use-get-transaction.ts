@@ -3,19 +3,19 @@ import {  useQuery } from "@tanstack/react-query";
 // Importing the API client to handle requests
 import { client } from "@/lib/hono";
 
-// Custom hook for fetching account details by its `id`
+// Custom hook for fetching transaction details by its `id`
 export const useGetAccount = (id?: string) => {
     const query = useQuery({
         enabled: !!id, // Ensures the query is executed only if `id` is provided
-        queryKey: ["account", { id }], // Unique key for caching and tracking the query
+        queryKey: ["transaction", { id }], // Unique key for caching and tracking the query
         queryFn: async() => {
-             // Sends a GET request to the API to fetch account data for the provided `id`
-            const response = await client.api.accounts[":id"].$get({
+             // Sends a GET request to the API to fetch transaction data for the provided `id`
+            const response = await client.api.transactions[":id"].$get({
                 param: { id },
             })
             // Throws an error if the response is not successful
             if (!response.ok) {
-                throw new Error("Failed to fetch account");
+                throw new Error("Failed to fetch transaction");
             }
             // Parses and returns the JSON data from the response
             const { data } = await response.json();
