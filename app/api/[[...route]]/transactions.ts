@@ -235,16 +235,27 @@ const app = new Hono()
             if (!auth?.userId) {
                 return c.json({ error: "Unauthorized" }, 401);
             }
+
+            const transactionsToDelete = db.$with("transactions_to_delete").as(
+                db.select({ id: transactions.id })
+                    .from(transactions)
+                    .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+                    .where(and(
+                        eq(transactions.id, id),
+                        eq(accounts.userId, auth.userId),  
+                    )),
+            )
+
             const [data] = await db
-                .delete(categories)
+                .with(transactionsToDelete)
+                .delete(transactions)
                 .where(
-                    and(
-                        eq(categories.userId, auth.userId), 
-                        eq(categories.id, id))
+                    inArray(transactions.id, sql`(select id from ${transactionsToDelete})`),
                 )
                 .returning({
-                    id: categories.id
+                    id: transactions.id
                 });
+                
             if (!data){
                 return c.json({ error: "Category not found" }, 404);
             }
