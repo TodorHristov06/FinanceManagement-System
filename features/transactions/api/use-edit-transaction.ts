@@ -5,11 +5,11 @@ import { toast } from "sonner"; // For displaying notifications.
 import { client} from "@/lib/hono"; // Hono client for API interactions.
 
 // Defining the response type for the PATCH request
-type ResponseType = InferResponseType<typeof client.api.accounts[":id"]["$patch"]>;
+type ResponseType = InferResponseType<typeof client.api.transactions[":id"]["$patch"]>;
 // Defining the request type for the PATCH request
-type RequestType = InferRequestType<typeof client.api.accounts[":id"]["$patch"]>["json"];
+type RequestType = InferRequestType<typeof client.api.transactions[":id"]["$patch"]>["json"];
 
-// Defining a hook for editing an account
+// Defining a hook for editing an transaction
 export const useEditAccount = (id?: string) => {
     const queryClient = useQueryClient(); // Access to React Query's cache.
  
@@ -22,7 +22,7 @@ export const useEditAccount = (id?: string) => {
         // Function to execute the API request
         mutationFn: async (json) => {
             // Executes a PATCH request to the API with the provided ID and data
-            const response = await client.api.accounts[":id"]["$patch"]({ 
+            const response = await client.api.transactions[":id"]["$patch"]({ 
                 param: { id }, // Passing the ID as a parameter.
                 json // Passing the JSON payload for the update.
             });
@@ -30,14 +30,14 @@ export const useEditAccount = (id?: string) => {
         },
         // Handling successful update
         onSuccess: () => {
-            toast.success("Account updated"); // Displaying success notification.
-            queryClient.invalidateQueries({ queryKey: ["account", { id }] }); // Refreshing the cache for the specific account.
-            queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Refreshing the cache for the accounts list.
+            toast.success("Transaction updated"); // Displaying success notification.
+            queryClient.invalidateQueries({ queryKey: ["transaction", { id }] }); // Refreshing the cache for the specific transaction.
+            queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Refreshing the cache for the transactions list.
             //TODO: invalidate summary and transactions 
         },
         // Handling errors
         onError: () => {
-            toast.error("Failed to edit account"); // Displaying error notification.
+            toast.error("Failed to edit transaction"); // Displaying error notification.
         },
     })
 
