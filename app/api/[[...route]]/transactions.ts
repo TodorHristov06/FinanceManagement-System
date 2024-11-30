@@ -4,7 +4,7 @@ import { db } from "@/db/drizzle";
 import { createId} from "@paralleldrive/cuid2";
 import { transactions, insertTransactionSchema, categories, accounts } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
-import { eq, and, inArray, gte, lte, desc } from "drizzle-orm";
+import { eq, and, inArray, gte, lte, desc, sql } from "drizzle-orm";
 import {zValidator} from "@hono/zod-validator";
 import { z } from "zod";
 import { parse, subDays } from "date-fns";
@@ -120,7 +120,7 @@ const app = new Hono()
                 id: createId(),
                 ...values,
             }).returning(); 
-            
+
             return c.json({ data })
     })
     .post(
@@ -139,16 +139,24 @@ const app = new Hono()
             if(!auth?.userId){
                 return c.json({ error: "Unauthorized" }, 401);
             }
+
+            const transactionsToDelete = db.$with("transactions_to_delete").as(
+                db.select({ id: transactions.id }).from(transactions)
+                    .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+                    .where(and(
+                        inArray(transactions.id, values.ids),
+                        eq(accounts.userId, auth.userId),  
+                    )),
+            )
+
             const data = await db
-                .delete(categories)
+                .with(transactionsToDelete)
+                .delete(transactions)
                 .where(
-                    and(
-                        eq(categories.userId, auth.userId),
-                        inArray(categories.id, values.ids),
-                    )
+                    inArray(transactions.id, sql`(select id from ${transactionsToDelete})`),
                 )
                 .returning({
-                    id: categories.id,
+                    id: transactions.id,
                 })
                 
             return c.json({ data });
