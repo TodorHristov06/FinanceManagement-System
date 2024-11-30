@@ -4,29 +4,30 @@ import { toast } from "sonner"; // Import toast notifications
 import { client } from "@/lib/hono"; // Import the Hono API client
 
 // Inferring the types for request and response from the Hono API endpoint
-type ResponseType = InferResponseType<typeof client.api.accounts.$post>;
-type RequestType = InferRequestType<typeof client.api.accounts.$post>["json"];
+type ResponseType = InferResponseType<typeof client.api.transactions.$post>;
+type RequestType = InferRequestType<typeof client.api.transactions.$post>["json"];
 
-// Custom hook for handling account creation
-export const useCreateAccount = () => {
+// Custom hook for handling transaction creation
+export const useCreateTransaction = () => {
     const queryClient = useQueryClient(); // React Query client for cache management
 
-    // Using the mutation hook to handle the account creation
+    // Using the mutation hook to handle the transaction creation
     const mutation = useMutation<
         ResponseType,
         Error,
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.accounts.$post({ json }); // Sending the API request to create the account
+            const response = await client.api.transactions.$post({ json }); // Sending the API request to create the transaction
             return await response.json(); // Parsing the response JSON
         }, 
         onSuccess: () => {
-            toast.success("Account created"); // Show success toast on creation
-            queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Invalidate the accounts query to refetch data
+            toast.success("Transaction created"); // Show success toast on creation
+            queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalidate the transactions query to refetch data\
+            //ToDo: invalidate summary
         },
         onError: () => {
-            toast.error("Failed to create account"); // Show error toast on failure
+            toast.error("Failed to create transaction"); // Show error toast on failure
         },
     })
 
