@@ -1,13 +1,13 @@
 // Importing necessary libraries and components
 import { z } from "zod";  // For schema validation
+import { Trash } from "lucide-react";  // Trash icon from Lucide
 import { useForm } from "react-hook-form";  // React hook for managing forms
 import { zodResolver } from "@hookform/resolvers/zod";  // Resolver for integrating Zod with react-hook-form
-import { Trash } from "lucide-react";  // Trash icon from Lucide
 import { Input } from "@/components/ui/input";  // Custom Input component
 import { Button } from "@/components/ui/button";  // Custom Button component
+import { Select } from "@/components/select";
 import { insertTransactionSchema } from "@/db/schema";  // Importing the schema for validation
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
-import { date } from "drizzle-orm/mysql-core";
 
 const formSchema = z.object({
     date: z.coerce.date(),
@@ -54,9 +54,9 @@ export const TransactionForm = ({
         defaultValues: defaultValues, 
     })
 
-    // Handle form submission
     const handleSubmit = (values: FormValues) => {
-        onSubmit(values); // Calling the onSubmit function passed via props
+        console.log({ values });
+        //onSubmit(values); 
     }
 
     // Handle account deletion
@@ -69,22 +69,27 @@ export const TransactionForm = ({
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
                 <FormField 
-                name="name" 
+                name="accountId" 
                 control={form.control} 
                 render={({field}) => (
                     <FormItem>
                         <FormLabel>
-                            Name
+                            Account
                         </FormLabel>
                         <FormControl>
-                            <Input 
-                            disabled={disabled} // Disables the input if the disabled prop is true
-                            placeholder="e.g Cash, Bank, Credit Card" 
-                            {...field}/> 
+                            <Select
+                             placeholder="Select an account"
+                             options={accountOptions}
+                             onCreate={onCreateAccount}
+                             value={field.value}
+                             onChange={field.onChange}
+                             disabled={disabled}
+                            />
                         </FormControl>
                         <FormMessage /> 
                     </FormItem>
                 )}/>
+                
                 <Button className="w-full" disabled={disabled}>
                     {id ? "Save changes" : "Create account"}
                 </Button>
