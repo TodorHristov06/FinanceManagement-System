@@ -5,24 +5,36 @@ import { zodResolver } from "@hookform/resolvers/zod";  // Resolver for integrat
 import { Trash } from "lucide-react";  // Trash icon from Lucide
 import { Input } from "@/components/ui/input";  // Custom Input component
 import { Button } from "@/components/ui/button";  // Custom Button component
-import { insertAccountSchema } from "@/db/schema";  // Importing the schema for validation
+import { insertTransactionSchema } from "@/db/schema";  // Importing the schema for validation
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
+import { date } from "drizzle-orm/mysql-core";
 
-// Defining the schema for the form, only picking 'name' from the insertAccountSchema
-const formSchema = insertAccountSchema.pick({
-    name: true,
+const formSchema = z.object({
+    date: z.coerce.date(),
+    accountId: z.string(),
+    categoryID: z.string().nullable().optional(),
+    payee: z.string(),
+    amount: z.number(), 
+    notes: z.string().nullable().optional(),
 })
 
-// Defining the type of form values based on the schema
-type FormValues = z.input<typeof formSchema>
+const apiSchema = insertTransactionSchema.omit({
+    id: true
+})
 
-// Defining the props for the AccountForm component
+type FormValues = z.input<typeof formSchema>
+type ApiFormValues = z.input<typeof apiSchema>
+
 type Props = {
-    id?: string;  // Optional account ID, used for updating existing accounts
-    defaultValues?: FormValues;  // Default values for the form (optional)
-    onSubmit: (values: FormValues) => void;  // Function to handle form submission
-    onDelete?: () => void;  // Optional function to handle account deletion
-    disabled?: boolean;  // Flag to disable form inputs and buttons
+    id?: string;  
+    defaultValues?: FormValues;  
+    onSubmit: (values: ApiFormValues) => void;  
+    onDelete?: () => void;  
+    disabled?: boolean;
+    accountOptions: {label: string, value: string}[];
+    categoryOptions: {label: string, value: string}[];
+    onCreateAccount: (name: string) => void;
+    onCreateCategory: (name: string) => void;
 };
 // TransactionForm component definition
 export const TransactionForm = ({
