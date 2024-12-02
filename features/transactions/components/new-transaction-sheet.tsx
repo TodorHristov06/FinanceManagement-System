@@ -1,5 +1,6 @@
 // Importing necessary libraries and components
-import { z } from "zod";  // For schema validation using Zod
+import { z } from "zod";  
+import { Loader2 } from "lucide-react";
 import { insertTransactionSchema } from "@/db/schema";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";  // UI components for sheet layout
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Custom hook to manage the opening of the New Transaction sheet
@@ -8,6 +9,9 @@ import { useCreateCategory } from "@/features/categories/api/use-create-category
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
+import { TransactionForm } from "@/features/transactions/components/transaction-form";
+
+
 
 // Defining the form schema, picking only the 'name' field for validation
 const formSchema = insertTransactionSchema.omit({
@@ -21,7 +25,7 @@ export const NewTransactionSheet = () => {
     // Using custom hook to manage the visibility of the New Transaction sheet
     const { isOpen, onClose } = useNewTransaction();
     // Mutation hook for creating a new transaction
-    const mutation = useCreateTransaction();
+    const createMutation = useCreateTransaction();
     // Form submission handler to create a new transaction
     const categoryQuery = useGetCategories();
     const categoryMutation = useCreateCategory();
@@ -42,8 +46,14 @@ export const NewTransactionSheet = () => {
         label: account.name, 
         value: account.id 
     }));
+
+    const isPending = createMutation.isPending || categoryMutation.isPending || accountMutation.isPending;
+
+    const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
+
+
     const onSubmit = (values: FormValues) => {
-        mutation.mutate(values, {
+        createMutation.mutate(values, {
             onSuccess: () => {
                 onClose(); // Close the sheet on successful transaction creation
             }
@@ -61,7 +71,24 @@ export const NewTransactionSheet = () => {
                         Add new transaction
                     </SheetDescription>
                 </SheetHeader>
-                <p> ToDo: Transaction Form</p>
+                {isLoading
+                    ? (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <Loader2 className="size-4 text-muted-foreground animate-spin" />
+                        </div>
+                    )
+                    : (
+                        <TransactionForm
+                        onSubmit={onSubmit}  
+                        disabled={false}
+                        categoryOptions={categoryOptions}
+                        onCreateCategory={onCreateCategory}
+                        accountOptions={accountOptions}
+                        onCreateAccount={onCreateAccount}
+                        />  
+                    )
+                }
+                
             </SheetContent>
         </Sheet> 
     );
