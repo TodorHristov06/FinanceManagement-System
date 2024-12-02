@@ -36,18 +36,22 @@ type Props = {
     onCreateAccount: (name: string) => void;
     onCreateCategory: (name: string) => void;
 };
-// TransactionForm component definition
+
 export const TransactionForm = ({
     id,
     defaultValues,
     onSubmit,
     onDelete,
     disabled,
+    accountOptions,
+    categoryOptions,
+    onCreateAccount,
+    onCreateCategory
 }: Props) => {
-    // Using react-hook-form to handle the form state, with validation from Zod
+
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema), // Integrating Zod schema for validation
-        defaultValues: defaultValues, // Setting default form values
+        resolver: zodResolver(formSchema), 
+        defaultValues: defaultValues, 
     })
 
     // Handle form submission
