@@ -8,11 +8,11 @@ import { DataTable } from "@/components/data-table"; // Import DataTable compone
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component for loading state
 import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete"; // Import bulk delete hook
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts"; // Import hook for fetching accounts
-import { useNewAccounts } from "@/features/accounts/hooks/use-new-accounts"; // Import hook for creating new accounts
+import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Import hook for creating new transactions
 
 
-const AccountsPage = () => {
-    const newAccounts = useNewAccounts(); // Hook to manage new account creation
+const TransactionsPage = () => {
+    const newTransaction = useNewTransaction(); // Hook to manage new account creation
     const deleteAccount = useBulkDeleteAccounts(); // Hook to handle bulk delete of accounts
     const accountsQuery = useGetAccounts(); // Hook to fetch account data
     const accounts = accountsQuery.data || []; // Use fetched accounts data or empty array
@@ -43,9 +43,9 @@ const AccountsPage = () => {
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">
-                        Accounts Page  
+                        Transaction History
                     </CardTitle>
-                    <Button onClick={newAccounts.onOpen} size="sm">
+                    <Button onClick={newTransaction.onOpen} size="sm">
                         <Plus className="size-4 mr-2"/>
                         Add new
                     </Button>
@@ -67,4 +67,4 @@ const AccountsPage = () => {
     )   
 }
 
-export default AccountsPage;
+export default TransactionsPage;
