@@ -6,6 +6,9 @@ import { EditAccountSheet } from "@/features/accounts/components/edit-account-sh
 
 import { NewCategorySheet } from "@/features/categories/components/new-category-sheet"; // Importing the NewCategorySheet component
 import { EditCategorySheet } from "@/features/categories/components/edit-category-sheet"; // Importing the EditCategorySheet component
+
+import { NewTransactionSheet } from "@/features/transactions/components/new-transaction-sheet";
+
 // SheetProvider component, acting as a central place to manage sheet components
 export const SheetProvider = () => {
     // Using the useMountedState hook to ensure the component is only rendered on the client
@@ -20,6 +23,8 @@ export const SheetProvider = () => {
 
             <NewCategorySheet/>
             <EditCategorySheet/>
+
+            <NewTransactionSheet/>
         </>
     )
 }
