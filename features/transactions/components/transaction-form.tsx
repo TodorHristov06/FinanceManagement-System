@@ -24,8 +24,8 @@ type Props = {
     onDelete?: () => void;  // Optional function to handle account deletion
     disabled?: boolean;  // Flag to disable form inputs and buttons
 };
-// AccountForm component definition
-export const AccountForm = ({
+// TransactionForm component definition
+export const TransactionForm = ({
     id,
     defaultValues,
     onSubmit,
