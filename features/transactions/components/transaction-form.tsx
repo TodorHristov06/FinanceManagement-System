@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";  // Custom Button component
 import { Select } from "@/components/select";
 import { insertTransactionSchema } from "@/db/schema";  // Importing the schema for validation
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
     date: z.coerce.date(),
@@ -142,6 +143,25 @@ export const TransactionForm = ({
                                 disabled={disabled}
                                 placeholder="Add a payee"
                                 {...field}
+                            />
+                        </FormControl>
+                        <FormMessage /> 
+                    </FormItem>
+                )}/>
+                <FormField 
+                name="notes" 
+                control={form.control} 
+                render={({field}) => (
+                    <FormItem>
+                        <FormLabel> 
+                            Notes
+                        </FormLabel>
+                        <FormControl>
+                            <Textarea
+                                {...field}
+                                value={field.value ?? ""}
+                                disabled={disabled}
+                                placeholder="Optional notes"
                             />
                         </FormControl>
                         <FormMessage /> 
