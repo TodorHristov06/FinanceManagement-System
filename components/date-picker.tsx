@@ -29,6 +29,9 @@ export const DatePicker = ({
                 <CalendarIcon className="size-4 mr-2" />
                 {value ? format(value, "PPP") : <span>Pick a date</span>}
             </Button>
-        </PopoverTrigger> 
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+            <Calendar mode="single" selected={value} onSelect={onChange} disabled={disabled} initialFocus />  
+        </PopoverContent>
     </Popover>
 }
