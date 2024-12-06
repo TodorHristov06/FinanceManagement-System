@@ -4,6 +4,7 @@ import { Trash } from "lucide-react";  // Trash icon from Lucide
 import { useForm } from "react-hook-form";  // React hook for managing forms
 import { zodResolver } from "@hookform/resolvers/zod";  // Resolver for integrating Zod with react-hook-form
 import { Input } from "@/components/ui/input";  // Custom Input component
+import { DatePicker } from "@/components/date-picker";
 import { Button } from "@/components/ui/button";  // Custom Button component
 import { Select } from "@/components/select";
 import { insertTransactionSchema } from "@/db/schema";  // Importing the schema for validation
