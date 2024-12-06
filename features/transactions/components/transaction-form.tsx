@@ -74,6 +74,9 @@ export const TransactionForm = ({
                 control={form.control} 
                 render={({field}) => (
                     <FormItem>
+                        {/* <FormLabel>
+                            Date
+                        </FormLabel> */}
                         <FormControl>
                             <DatePicker 
                                 value={field.value} 
@@ -121,6 +124,24 @@ export const TransactionForm = ({
                              value={field.value}
                              onChange={field.onChange}
                              disabled={disabled}
+                            />
+                        </FormControl>
+                        <FormMessage /> 
+                    </FormItem>
+                )}/>
+                <FormField 
+                name="payee" 
+                control={form.control} 
+                render={({field}) => (
+                    <FormItem>
+                        <FormLabel> 
+                            Payee
+                        </FormLabel>
+                        <FormControl>
+                            <Input
+                                disabled={disabled}
+                                placeholder="Add a payee"
+                                {...field}
                             />
                         </FormControl>
                         <FormMessage /> 
