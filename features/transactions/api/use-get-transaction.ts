@@ -4,7 +4,7 @@ import {  useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/hono";
 
 // Custom hook for fetching transaction details by its `id`
-export const useGetAccount = (id?: string) => {
+export const useGetTransaction = (id?: string) => {
     const query = useQuery({
         enabled: !!id, // Ensures the query is executed only if `id` is provided
         queryKey: ["transaction", { id }], // Unique key for caching and tracking the query

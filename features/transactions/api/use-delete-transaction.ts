@@ -8,7 +8,7 @@ import { client } from "@/lib/hono"; // Hono client for API interactions.
 type ResponseType = InferResponseType<typeof client.api.transactions[":id"]["$delete"]>;
 
 // Defining a hook for deleting an transaction
-export const useDeleteAccount = (id?: string) => {
+export const useDeleteTransaction = (id?: string) => {
     const queryClient = useQueryClient(); // Access to React Query's cache.
 
     // Initializing useMutation for the delete operation

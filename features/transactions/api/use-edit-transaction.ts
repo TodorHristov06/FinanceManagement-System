@@ -10,7 +10,7 @@ type ResponseType = InferResponseType<typeof client.api.transactions[":id"]["$pa
 type RequestType = InferRequestType<typeof client.api.transactions[":id"]["$patch"]>["json"];
 
 // Defining a hook for editing an transaction
-export const useEditAccount = (id?: string) => {
+export const useEditTransaction = (id?: string) => {
     const queryClient = useQueryClient(); // Access to React Query's cache.
  
      // Initializing useMutation for the edit operation
