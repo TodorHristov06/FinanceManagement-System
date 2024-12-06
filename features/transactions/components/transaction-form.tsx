@@ -69,6 +69,21 @@ export const TransactionForm = ({
         // The Form component is a wrapper for the react-hook-form
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
+            <FormField 
+                name="date" 
+                control={form.control} 
+                render={({field}) => (
+                    <FormItem>
+                        <FormControl>
+                            <DatePicker 
+                                value={field.value} 
+                                onChange={field.onChange} 
+                                disabled={disabled} 
+                            />
+                        </FormControl>
+                        <FormMessage /> 
+                    </FormItem>
+                )}/>
                 <FormField 
                 name="accountId" 
                 control={form.control} 
