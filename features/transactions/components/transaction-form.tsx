@@ -11,13 +11,14 @@ import { insertTransactionSchema } from "@/db/schema";  // Importing the schema 
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
 import { Textarea } from "@/components/ui/textarea";
 import { AmountInput } from "@/components/amount-input";
+import { convertAmountToMiliunits } from "@/lib/utils";
 
 const formSchema = z.object({
     date: z.coerce.date(),
     accountId: z.string(),
-    categoryID: z.string().nullable().optional(),
+    categoryId: z.string().nullable().optional(),
     payee: z.string(),
-    amount: z.number(), 
+    amount: z.string(), 
     notes: z.string().nullable().optional(),
 })
 
@@ -58,8 +59,14 @@ export const TransactionForm = ({
     })
 
     const handleSubmit = (values: FormValues) => {
+        const amount = parseFloat(values.amount);
+        const amountInMiliunits = convertAmountToMiliunits(amount);
         console.log({ values });
-        //onSubmit(values); 
+
+        onSubmit({
+            ...values,
+            amount: amountInMiliunits,
+        }); 
     }
 
     // Handle account deletion
@@ -76,9 +83,6 @@ export const TransactionForm = ({
                 control={form.control} 
                 render={({field}) => (
                     <FormItem>
-                        {/* <FormLabel>
-                            Date
-                        </FormLabel> */}
                         <FormControl>
                             <DatePicker 
                                 value={field.value} 
@@ -111,7 +115,7 @@ export const TransactionForm = ({
                     </FormItem>
                 )}/>
                 <FormField 
-                name="categoryID" 
+                name="categoryId" 
                 control={form.control} 
                 render={({field}) => (
                     <FormItem>
@@ -144,6 +148,7 @@ export const TransactionForm = ({
                                 disabled={disabled}
                                 placeholder="Add a payee"
                                 {...field}
+                                value={field.value || ""}
                             />
                         </FormControl>
                         <FormMessage /> 
@@ -158,15 +163,8 @@ export const TransactionForm = ({
                             Amount
                         </FormLabel>
                         <FormControl>
-                            {/* <AmountInput
-                                {...field}
-                                disabled={disabled}
-                                placeholder="0.00"
-                            /> */}
                             <AmountInput
                                 {...field}
-                                value={String(field.value)} 
-                                onChange={(value) => field.onChange(Number(value) || 0)} 
                                 disabled={disabled}
                                 placeholder="0.00"
                             />
