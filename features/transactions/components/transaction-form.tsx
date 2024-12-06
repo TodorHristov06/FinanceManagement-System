@@ -166,7 +166,7 @@ export const TransactionForm = ({
                             <AmountInput
                                 {...field}
                                 value={String(field.value)} 
-                                //onChange={(value) => field.onChange(Number(value) || 0)} 
+                                onChange={(value) => field.onChange(Number(value) || 0)} 
                                 disabled={disabled}
                                 placeholder="0.00"
                             />
