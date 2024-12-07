@@ -56,6 +56,25 @@ export const columns: ColumnDef<ResponseType>[] = [
     }
   },
   {
+    accessorKey: "category",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Category
+          <ArrowUpDown className="ml-2 h-4 w-4" /> {/* Sorting icon */}
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("date")) as Date;
+      return (
+        <span>
+          {row.original.category}
+        </span>
+      )
+    }
+  },
+  {
     id: "actions", // Define the 'actions' column for each row
     cell: ({ row }) => <Actions id={row.original.id} /> // Render the Actions component with the account ID
   }
