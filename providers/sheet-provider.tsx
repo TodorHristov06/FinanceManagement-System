@@ -8,6 +8,7 @@ import { NewCategorySheet } from "@/features/categories/components/new-category-
 import { EditCategorySheet } from "@/features/categories/components/edit-category-sheet"; // Importing the EditCategorySheet component
 
 import { NewTransactionSheet } from "@/features/transactions/components/new-transaction-sheet";
+import { EditTransactionSheet } from "@/features/transactions/components/edit-transaction-sheet";
 
 // SheetProvider component, acting as a central place to manage sheet components
 export const SheetProvider = () => {
@@ -25,6 +26,7 @@ export const SheetProvider = () => {
             <EditCategorySheet/>
 
             <NewTransactionSheet/>
+            <EditTransactionSheet/>
         </>
     )
 }
