@@ -7,9 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox componen
 import { InferResponseType } from "hono"; // Type inference for the API response
 import { client } from "@/lib/hono"; // Import client for API communication
 import { Actions } from "./actions"; // Import Actions component for each row
+import { format } from "date-fns";
 
 // Define response type from API to infer account data shape
-export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"] [0]
+export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"] [0]
 
 // Define table columns
 export const columns: ColumnDef<ResponseType>[] = [
@@ -36,15 +37,23 @@ export const columns: ColumnDef<ResponseType>[] = [
     enableHiding: false, // Disable hiding for this column
   },
   {
-    accessorKey: "name", // Define column for account name
+    accessorKey: "date",
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Name
+          Date
           <ArrowUpDown className="ml-2 h-4 w-4" /> {/* Sorting icon */}
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("date")) as Date;
+      return (
+        <span>
+          {format(date, "dd MMM, yyyy")}
+        </span>
+      )
+    }
   },
   {
     id: "actions", // Define the 'actions' column for each row
