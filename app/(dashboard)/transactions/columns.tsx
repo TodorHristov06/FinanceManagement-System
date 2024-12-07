@@ -110,6 +110,24 @@ export const columns: ColumnDef<ResponseType>[] = [
     }
   },
   {
+    accessorKey: "account",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Account
+          <ArrowUpDown className="ml-2 h-4 w-4" /> {/* Sorting icon */}
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.account}
+        </span>
+      )
+    }
+  },
+  {
     id: "actions", // Define the 'actions' column for each row
     cell: ({ row }) => <Actions id={row.original.id} /> // Render the Actions component with the account ID
   }
