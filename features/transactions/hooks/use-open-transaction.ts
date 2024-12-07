@@ -10,7 +10,7 @@ type OpenTransactionState = {
 };
 
 // Creating a custom hook using `zustand` to manage the state of the Edit Account sheet
-export const useOpenAccount = create<OpenTransactionState>((set) => ({
+export const useOpenTransaction = create<OpenTransactionState>((set) => ({
     id: undefined, // Initial state: no account ID is selected
     isOpen: false, // Initial state: the sheet is closed
     onOpen: (id: string ) => set({ isOpen: true, id}), // Open the sheet and set the account ID
