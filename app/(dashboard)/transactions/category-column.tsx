@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 type Props = {
     id: string;
-    category: string;
-    categoryId: string;
+    category: string | null;
+    categoryId: string | null;
 };
 
 export const CategoryColumn = ({
