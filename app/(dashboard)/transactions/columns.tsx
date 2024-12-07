@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"; // Import Button component from UI library
 import { ColumnDef } from "@tanstack/react-table"; // Import ColumnDef for defining table columns
-import { ArrowUpDown } from "lucide-react"; // Import sorting icon
+import { ArrowUpDown} from "lucide-react"; // Import sorting icon
 import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox component from UI library       
 import { InferResponseType } from "hono"; // Type inference for the API response
 import { client } from "@/lib/hono"; // Import client for API communication
@@ -10,6 +10,7 @@ import { Actions } from "./actions"; // Import Actions component for each row
 import { format } from "date-fns";
 import { parse } from "path";
 import { formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // Define response type from API to infer account data shape
 export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"] [0]
@@ -99,9 +100,12 @@ export const columns: ColumnDef<ResponseType>[] = [
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
       return (
-        <span>
-          {formatCurrency(amount)}
-        </span>
+       <Badge 
+       variant={amount < 0 ? "destructive" : "primary"}
+       className="text-xs font-medium px-3.5 py-2.5"
+       >
+        {formatCurrency(amount)}
+        </Badge>
       )
     }
   },
