@@ -8,6 +8,8 @@ import { InferResponseType } from "hono"; // Type inference for the API response
 import { client } from "@/lib/hono"; // Import client for API communication
 import { Actions } from "./actions"; // Import Actions component for each row
 import { format } from "date-fns";
+import { parse } from "path";
+import { formatCurrency } from "@/lib/utils";
 
 // Define response type from API to infer account data shape
 export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"] [0]
@@ -66,10 +68,39 @@ export const columns: ColumnDef<ResponseType>[] = [
       )
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("date")) as Date;
       return (
         <span>
           {row.original.category}
+        </span>
+      )
+    }
+  },
+  {
+    accessorKey: "payee",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Payee
+          <ArrowUpDown className="ml-2 h-4 w-4" /> {/* Sorting icon */}
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Amount
+          <ArrowUpDown className="ml-2 h-4 w-4" /> {/* Sorting icon */}
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      return (
+        <span>
+          {formatCurrency(amount)}
         </span>
       )
     }
