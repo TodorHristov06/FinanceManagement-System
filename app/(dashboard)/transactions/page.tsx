@@ -4,24 +4,24 @@ import { Button } from "@/components/ui/button"; // Import Button component from
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import Card components for layout
 import { Loader2, Plus } from "lucide-react"; // Import icons for loading and adding
 import { columns } from "./columns"; // Import column definitions for the table
-import { DataTable } from "@/components/data-table"; // Import DataTable component for displaying accounts
+import { DataTable } from "@/components/data-table"; // Import DataTable component for displaying transactions
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component for loading state
-import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete"; // Import bulk delete hook
-import { useGetAccounts } from "@/features/accounts/api/use-get-accounts"; // Import hook for fetching accounts
+import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-delete-transactions";
+import { useGetTransactions } from "@/features/transactions/api/use-get-transactions";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Import hook for creating new transactions
 
 
 const TransactionsPage = () => {
-    const newTransaction = useNewTransaction(); // Hook to manage new account creation
-    const deleteAccount = useBulkDeleteAccounts(); // Hook to handle bulk delete of accounts
-    const accountsQuery = useGetAccounts(); // Hook to fetch account data
-    const accounts = accountsQuery.data || []; // Use fetched accounts data or empty array
+    const newTransaction = useNewTransaction(); // Hook to manage new transaction creation
+    const deleteTransactions = useBulkDeleteTransactions(); // Hook to handle bulk delete of transactions
+    const transactionsQuery = useGetTransactions(); // Hook to fetch transaction data
+    const transactions = transactionsQuery.data || []; // Use fetched transactions data or empty array
 
     const isDisabled =
-        accountsQuery.isLoading ||
-        deleteAccount.isPending; // Disable actions if data is loading or deletion is in progress
+    transactionsQuery.isLoading ||
+    deleteTransactions.isPending; // Disable actions if data is loading or deletion is in progress
 
-    if (accountsQuery.isLoading) {
+    if (transactionsQuery.isLoading) {
         return(
             <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
                 <Card className="border-none drop-shadow-sm">
@@ -54,10 +54,10 @@ const TransactionsPage = () => {
                     <DataTable 
                         filterKey="email" 
                         columns={columns} 
-                        data={accounts} 
+                        data={transactions} 
                         onDelete={(row) => {
                             const ids = row.map((r) => r.original.id); 
-                            deleteAccount.mutate({ids});
+                            deleteTransactions.mutate({ids});
                         }}
                         disabled={isDisabled}
                     />
