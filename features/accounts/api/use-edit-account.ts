@@ -33,6 +33,7 @@ export const useEditAccount = (id?: string) => {
             toast.success("Account updated"); // Displaying success notification.
             queryClient.invalidateQueries({ queryKey: ["account", { id }] }); // Refreshing the cache for the specific account.
             queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Refreshing the cache for the accounts list.
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
             //TODO: invalidate summary and transactions 
         },
         // Handling errors
