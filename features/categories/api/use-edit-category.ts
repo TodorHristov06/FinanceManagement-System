@@ -33,7 +33,7 @@ export const useEditCategory = (id?: string) => {
             toast.success("Category updated"); // Displaying success notification.
             queryClient.invalidateQueries({ queryKey: ["category", { id }] }); // Refreshing the cache for the specific category.
             queryClient.invalidateQueries({ queryKey: ["categories"] }); // Refreshing the cache for the categories list.
-            //TODO: invalidate summary and transactions 
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
         },
         // Handling errors
         onError: () => {

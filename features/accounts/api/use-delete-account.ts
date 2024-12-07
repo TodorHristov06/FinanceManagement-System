@@ -29,7 +29,7 @@ export const useDeleteAccount = (id?: string) => {
             toast.success("Account deleted"); // Displaying success notification.
             queryClient.invalidateQueries({ queryKey: ["account", { id }] }); // Refreshing the cache for the specific account.
             queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Refreshing the cache for the accounts list.
-            //TODO: invalidate summary and transactions
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
         },
         // Handling errors
         onError: () => {

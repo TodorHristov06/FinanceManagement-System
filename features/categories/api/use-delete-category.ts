@@ -29,7 +29,7 @@ export const useDeleteCategory = (id?: string) => {
             toast.success("Category deleted"); // Displaying success notification.
             queryClient.invalidateQueries({ queryKey: ["category", { id }] }); // Refreshing the cache for the specific category.
             queryClient.invalidateQueries({ queryKey: ["categories"] }); // Refreshing the cache for the categories list.
-            //TODO: invalidate summary and transactions
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
         },
         // Handling errors
         onError: () => {
