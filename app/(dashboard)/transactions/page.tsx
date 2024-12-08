@@ -9,9 +9,22 @@ import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton componen
 import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-delete-transactions";
 import { useGetTransactions } from "@/features/transactions/api/use-get-transactions";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Import hook for creating new transactions
+import { useState } from "react";
 
+enum VARIANTS {
+    LIST = "LIST",
+    IMPORT = "IMPORT"
+}
+
+const INITIAL_IMPORT_RESULTS = {
+    data: [],
+    errors: [],
+    meta: {},
+}
 
 const TransactionsPage = () => {
+    const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+
     const newTransaction = useNewTransaction(); // Hook to manage new transaction creation
     const deleteTransactions = useBulkDeleteTransactions(); // Hook to handle bulk delete of transactions
     const transactionsQuery = useGetTransactions(); // Hook to fetch transaction data
