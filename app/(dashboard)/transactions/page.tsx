@@ -67,11 +67,13 @@ const TransactionsPage = () => {
                     <CardTitle className="text-xl line-clamp-1">
                         Transaction History
                     </CardTitle>
-                    <Button onClick={newTransaction.onOpen} size="sm">
-                        <Plus className="size-4 mr-2"/>
-                        Add new
-                    </Button>
-                    <UploadButton onUpload={() => {}} />
+                    <div className="flex items-center gap-x-2">
+                        <Button onClick={newTransaction.onOpen} size="sm">
+                            <Plus className="size-4 mr-2"/>
+                            Add new
+                        </Button>
+                        <UploadButton onUpload={() => {}} />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <DataTable 
