@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"; // Import Button component from UI library
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import Card components for layout
-import { Loader2, Plus } from "lucide-react"; // Import icons for loading and adding
+import { Loader2, Plus, Upload } from "lucide-react"; // Import icons for loading and adding
 import { columns } from "./columns"; // Import column definitions for the table
 import { DataTable } from "@/components/data-table"; // Import DataTable component for displaying transactions
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component for loading state
@@ -10,6 +10,7 @@ import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-
 import { useGetTransactions } from "@/features/transactions/api/use-get-transactions";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Import hook for creating new transactions
 import { useState } from "react";
+import { UploadButton } from "./upload-button";
 
 enum VARIANTS {
     LIST = "LIST",
@@ -70,7 +71,7 @@ const TransactionsPage = () => {
                         <Plus className="size-4 mr-2"/>
                         Add new
                     </Button>
-                    
+                    <UploadButton onUpload={() => {}} />
                 </CardHeader>
                 <CardContent>
                     <DataTable 
