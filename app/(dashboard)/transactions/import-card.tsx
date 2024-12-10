@@ -54,6 +54,8 @@ export const ImportCard = ({
         })
     }
 
+    const progress = Object.values(selectedColumns).filter(Boolean).length;
+
     return(
         <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
             <Card className="border-none drop-shadow-sm">
@@ -64,6 +66,12 @@ export const ImportCard = ({
                     <div className="flex items-center gap-x-2">
                         <Button onClick={onCancel} size="sm">
                             Cancel
+                        </Button>
+                        <Button
+                            disabled={progress < requiredOptions.length}
+                            onClick={() => {}}
+                        >
+                            Continue({progress}/{requiredOptions.length})
                         </Button>
                     </div>
                 </CardHeader>
