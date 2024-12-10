@@ -31,7 +31,7 @@ export const ImportCard = ({
                         Import Transactions
                     </CardTitle>
                     <div className="flex items-center gap-x-2">
-                        <Button onClick={() => {}} size="sm">
+                        <Button onClick={onCancel} size="sm">
                             Cancel
                         </Button>
                     </div>
