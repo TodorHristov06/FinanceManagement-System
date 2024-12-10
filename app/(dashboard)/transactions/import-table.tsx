@@ -3,14 +3,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 type Props = {
     headers: string[];
     body: string[][];
-    selectColumns: Record<string, string | null>;
+    selectedColumns: Record<string, string | null>;
     onTableHeadSelectChange: (columnIndex: number, value: string | null) => void;
 }
 
 export const ImportTable = ({
     headers,
     body,
-    selectColumns,
+    selectedColumns,
     onTableHeadSelectChange
 }: Props) => {
     return(
@@ -20,7 +20,11 @@ export const ImportTable = ({
                     <TableRow>
                         {headers.map((_item, index) => (
                             <TableHead key={index}>
-                                {index}
+                                <TableHeadSelect
+                                    columnIndex={index}
+                                    selectedColumns={selectedColumns}
+                                    onChange = {onTableHeadSelectChange}
+                                />
                             </TableHead>
                         ))}
                     </TableRow>
