@@ -12,7 +12,7 @@ const requiredOptions = [
     "payee",
 ]
 
-interface SelectColumnsState {
+interface SelectedColumnsState {
     [key: string]: string | null;
 }
 type Props = {
@@ -25,7 +25,7 @@ export const ImportCard = ({
     onCancel,
     onSubmit, 
 }: Props) => {
-    const [selectColumns, setSelectColumns] = useState<SelectColumnsState>({});
+    const [selectedColumns, setSelectedColumns] = useState<SelectedColumnsState>({});
     const headers = data[0];
     const body = data.slice(1);
     return(
@@ -45,7 +45,7 @@ export const ImportCard = ({
                     <ImportTable
                         headers={headers}
                         body={body}
-                        selectColumns={selectColumns}
+                        selectedColumns={selectedColumns}
                         onTableHeadSelectChange={() => {}}
                     />
                 </CardContent>
