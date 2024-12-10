@@ -26,9 +26,16 @@ const INITIAL_IMPORT_RESULTS = {
 
 const TransactionsPage = () => {
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+    const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
     const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
+        setImportResults(results);
         setVariant(VARIANTS.IMPORT);
+    }
+
+    const onCancelImport = () => {
+        setImportResults(INITIAL_IMPORT_RESULTS);
+        setVariant(VARIANTS.LIST);
     }
 
     const newTransaction = useNewTransaction(); // Hook to manage new transaction creation
@@ -59,9 +66,9 @@ const TransactionsPage = () => {
 
     if (variant === VARIANTS.IMPORT) {
         return (
-            <div>
-                This is a screen for import
-            </div>
+            <>
+                <ImportCard/>
+            </>
         )
     }
 
