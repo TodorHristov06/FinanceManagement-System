@@ -83,7 +83,8 @@ export const DataCard = ({
                         formattingFn={formatCurrency}
                     />
                 </h1>
-                <p className={cn("text-sm text-muted-foreground line-clamp-1", 
+                <p className={cn(
+                    "text-muted-foreground text-sm  line-clamp-1", 
                     percentageChange > 0 && "text-emerald-500",
                     percentageChange < 0 && "text-rose-500",
                 )}>
