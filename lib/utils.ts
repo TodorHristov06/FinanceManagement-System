@@ -1,8 +1,6 @@
-// Importing `clsx` for conditional className handling and its type definition
 import { clsx, type ClassValue } from "clsx"
-// Importing `twMerge` to merge Tailwind CSS class names and handle conflicts
 import { twMerge } from "tailwind-merge"
-// Utility function to combine and merge class names
+import { eachDayOfInterval, isSameDay } from "date-fns";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -34,4 +32,39 @@ export function calculatePercentageChange(
   }
 
   return ((current - previous) / previous) * 100;
+}
+
+export function fillMissingDays (
+  activeDays: {
+    date: Date,
+    income: number,
+    expenses: number,
+  }[],
+  startDate: Date,
+  endDate: Date,
+) {
+  if(activeDays.length === 0) {
+    return [];
+  }
+
+  const allDays = eachDayOfInterval({
+    start: startDate,
+    end: endDate,
+  });
+
+  const transactionsByDay = allDays.map((day) => {
+    const found = activeDays.find((d) => isSameDay(d.date, day));
+
+    if (found) {
+      return found;
+    }else {
+      return {
+        date: day,
+        income: 0,
+        expenses: 0,
+      }
+    }
+  })
+
+  return transactionsByDay
 }
