@@ -44,7 +44,7 @@ interface DataCardProps extends BoxVariants, IconVariants {
     icon: IconType;
     title: string;
     value?: number;
-    dataRange: string;
+    dateRange: string;
     PercentageChange?: number;
     
 }
@@ -53,7 +53,7 @@ export const DataCard = ({
     title,
     value = 0,
     variant,
-    dataRange,
+    dateRange,
     PercentageChange = 0,
 }: DataCardProps) => {
     return(
@@ -62,6 +62,9 @@ export const DataCard = ({
                 <CardTitle className="text-2xl line-clamp-1">
                     {title}
                 </CardTitle>
+                <CardDescription className="line-clamp1">
+                    {dateRange}
+                </CardDescription>
             </CardHeader>
         </Card>
     )
