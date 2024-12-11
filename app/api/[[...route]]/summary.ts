@@ -6,7 +6,7 @@ import { z } from "zod";
 import {accounts, categories, transactions} from "@/db/schema";
 import { and, eq, gte, lt, lte, sql, sum, desc } from "drizzle-orm";
 import { db } from "@/db/drizzle";
-import { calculatePercentageChange } from "@/lib/utils";
+import { calculatePercentageChange, fillMissingDays } from "@/lib/utils";
 
 const app = new Hono()
     .get(
@@ -145,6 +145,12 @@ const app = new Hono()
                 )
                 .groupBy(transactions.date)
                 .orderBy(transactions.date);
+            
+            const days = fillMissingDays(
+                activeDays, 
+                startDate, 
+                endDate
+            );
                 
             return c.json({
                 currentPeriod,
@@ -153,7 +159,8 @@ const app = new Hono()
                 expensesChange,
                 remainingChange,
                 finalCategories,
-                activeDays
+                activeDays,
+                days,
             })
         }
     )
