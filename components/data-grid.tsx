@@ -1,4 +1,4 @@
-"use-client"
+"use client"
 
 import { formatDateRange } from "@/lib/utils"
 import { useSearchParams } from "next/navigation"
