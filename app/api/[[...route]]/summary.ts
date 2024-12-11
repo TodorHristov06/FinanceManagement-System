@@ -153,14 +153,16 @@ const app = new Hono()
             );
                 
             return c.json({
-                currentPeriod,
-                lastPeriod,
-                incomeChange,
-                expensesChange,
-                remainingChange,
-                finalCategories,
-                activeDays,
-                days,
+                data: {
+                    remainingAmount: currentPeriod.remaining,
+                    remainingChange,
+                    incomeAmount: currentPeriod.income,
+                    incomeChange,
+                    expensesAmount: currentPeriod.expenses,
+                    expensesChange,
+                    categories: finalCategories,
+                    days,
+                }
             })
         }
     )
