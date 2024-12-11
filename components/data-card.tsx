@@ -4,7 +4,7 @@ import { IconType } from "react-icons/lib";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const boxVariant = cva(
-    "rounded-md p-3",
+    " shrink-0 rounded-md p-3",
     {
         variants: {
             variant: {
@@ -25,10 +25,10 @@ const iconVariant = cva(
     {
         variants: {
             variant: {
-                default: "fill-blue-500/20",
-                success: "fill-emerald-500/20",
-                danger: "fill-rose-500/20",
-                warning: "fill-amber-500/20",
+                default: "fill-blue-500",
+                success: "fill-emerald-500",
+                danger: "fill-rose-500",
+                warning: "fill-amber-500",
             }
         },
         defaultVariants: {
@@ -67,10 +67,7 @@ export const DataCard = ({
                         {dateRange}
                     </CardDescription>
                 </div>
-                <div className={cn(
-                    "shrink-0",
-                    boxVariant({ variant })
-                )}>
+                <div className={cn(boxVariant({ variant }))}>
                     <Icon className={cn(iconVariant({ variant }))} />
                 </div> 
             </CardHeader>
