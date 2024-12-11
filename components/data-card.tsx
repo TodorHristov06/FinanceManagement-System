@@ -1,5 +1,5 @@
 import { VariantProps, cva } from "class-variance-authority";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
 import { IconType } from "react-icons/lib";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CountUp} from "@/components/count-up";
@@ -46,7 +46,7 @@ interface DataCardProps extends BoxVariants, IconVariants {
     title: string;
     value?: number;
     dateRange: string;
-    PercentageChange?: number;
+    percentageChange?: number;
     
 }
 export const DataCard = ({
@@ -55,7 +55,7 @@ export const DataCard = ({
     value = 0,
     variant,
     dateRange,
-    PercentageChange = 0,
+    percentageChange = 0,
 }: DataCardProps) => {
     return(
         <Card className="border-none drop-shadow-sm">
@@ -83,6 +83,12 @@ export const DataCard = ({
                         formattingFn={formatCurrency}
                     />
                 </h1>
+                <p className={cn("text-sm text-muted-foreground line-clamp-1", 
+                    percentageChange > 0 && "text-emerald-500",
+                    percentageChange < 0 && "text-rose-500",
+                )}>
+                    {formatPercentage(percentageChange)} from last period
+                </p>
             </CardContent>
         </Card>
     )
