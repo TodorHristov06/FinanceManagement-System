@@ -59,12 +59,20 @@ export const DataCard = ({
     return(
         <Card className="border-none drop-shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-x-4">
-                <CardTitle className="text-2xl line-clamp-1">
-                    {title}
-                </CardTitle>
-                <CardDescription className="line-clamp1">
-                    {dateRange}
-                </CardDescription>
+                <div className="space-y-2">
+                    <CardTitle className="text-2xl line-clamp-1">
+                        {title}
+                    </CardTitle>
+                    <CardDescription className="line-clamp-1">
+                        {dateRange}
+                    </CardDescription>
+                </div>
+                <div className={cn(
+                    "shrink-0",
+                    boxVariant({ variant })
+                )}>
+                    <Icon className={cn(iconVariant({ variant }))} />
+                </div> 
             </CardHeader>
         </Card>
     )
