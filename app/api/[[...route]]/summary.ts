@@ -6,6 +6,7 @@ import { z } from "zod";
 import {accounts, transactions} from "@/db/schema";
 import { and, eq, gte, lte, sql, sum } from "drizzle-orm";
 import { db } from "@/db/drizzle";
+import { calculatePercentageChange } from "@/lib/utils";
 
 const app = new Hono()
     .get(
@@ -49,7 +50,7 @@ const app = new Hono()
                 return await db
                     .select({
                         income: sql`SUM(CASE WHEN ${transactions.amount} >= 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
-                        expense: sql`SUM(CASE WHEN ${transactions.amount} < 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
+                        expenses: sql`SUM(CASE WHEN ${transactions.amount} < 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
                         remaining: sum(transactions.amount).mapWith(Number),
                     })
                     .from(transactions)
@@ -74,10 +75,28 @@ const app = new Hono()
                 startDate,
                 endDate
             );
+            
+            const incomeChange = calculatePercentageChange(
+                currentPeriod.income,
+                lastPeriod.income
+            )
+
+            const expensesChange = calculatePercentageChange(
+                currentPeriod.expenses,
+                lastPeriod.expenses
+            )
+
+            const remainingChange = calculatePercentageChange(
+                currentPeriod.remaining,
+                lastPeriod.remaining
+            )
 
             return c.json({
                 currentPeriod,
                 lastPeriod,
+                incomeChange,
+                expensesChange,
+                remainingChange
             })
         }
     )
