@@ -17,7 +17,7 @@ const SEED_CATEGORIES = [
     { id: "category_7", name: "Clothing", userId: SEED_USER_ID, plaidId: null },
 ];
 
-const SEED_ACCOUNT_ID = [
+const SEED_ACCOUNTS = [
     { id: "account_1", name: "Checking", userId: SEED_USER_ID, plaidId: null },
     { id: "account_2", name: "Savings", userId: SEED_USER_ID, plaidId: null },
 ];
@@ -61,7 +61,7 @@ const generateTransactionsForDay = (day: Date) => {
 
         SEED_TRANSACTIONS.push({
             id: `transaction_${format(day, "yyyy-MM-dd")}_${i}`,
-            accountId: SEED_ACCOUNT_ID[0].id, // Assuming we're always using the first account
+            accountId: SEED_ACCOUNTS[0].id, // Assuming we're always using the first account
             categoryId: category.id,
             date: day,
             amount: formattedAmount,
@@ -87,7 +87,7 @@ const main = async () => {
         //Seed categories
         await db.insert(categories).values(SEED_CATEGORIES).execute();
         //Seed accounts
-        await db.insert(accounts).values(SEED_ACCOUNT_ID).execute();
+        await db.insert(accounts).values(SEED_ACCOUNTS).execute();
         //Seed transactions
         await db.insert(transactions).values(SEED_TRANSACTIONS).execute();
     } catch (error) {
