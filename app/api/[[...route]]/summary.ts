@@ -125,6 +125,26 @@ const app = new Hono()
                     value: otherSum
                 })
             }
+
+            const activeDays = await db
+                .select({
+                    date: transactions.date,
+                    income: sql`SUM(CASE WHEN ${transactions.amount} >= 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
+                    expenses: sql`SUM(CASE WHEN ${transactions.amount} < 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
+                })
+                .from(transactions)
+                .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+                .where(
+                    and(
+                        accountId ? 
+                        eq(transactions.accountId, accountId) : undefined,
+                        eq(accounts.userId, auth.userId),
+                        gte(transactions.date, startDate),
+                        lte(transactions.date, endDate),
+                    )
+                )
+                .groupBy(transactions.date)
+                .orderBy(transactions.date);
                 
             return c.json({
                 currentPeriod,
@@ -132,7 +152,8 @@ const app = new Hono()
                 incomeChange,
                 expensesChange,
                 remainingChange,
-                finalCategories
+                finalCategories,
+                activeDays
             })
         }
     )
