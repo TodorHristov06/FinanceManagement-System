@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { Tooltip, XAxis, AreaChart, Area, ResponsiveContainer, CartesianGrid } from "recharts";
 
 type Props = {
@@ -24,6 +25,14 @@ export const AreaVariant = ({ data }: Props) => {
                         <stop offset="98%" stopColor="#f43f5e   " stopOpacity={0}/>
                     </linearGradient>
                 </defs>
+                <XAxis 
+                    axisLine={false}
+                    tickLine={false}
+                    dataKey="date"
+                    tickFormatter={(value) => format(value, "dd MMM")}
+                    style={{ fontSize: 12 }}
+                    tickMargin={16}
+                />
             </AreaChart>
         </ResponsiveContainer>
     )
