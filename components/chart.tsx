@@ -4,7 +4,7 @@ import { AreaVariant } from "@/components/area-variant";
 
 type Props = {
     data?: {
-        data: string;
+        date: string;
         income: number;
         expenses: number;
     }[];

@@ -3,8 +3,8 @@ import { Tooltip, XAxis, AreaChart, Area, ResponsiveContainer, CartesianGrid } f
 import { CustomTooltip } from "./custom-tooltip";
 
 type Props = {
-    data?: {
-        data: string;
+    data: {
+        date: string;
         income: number;
         expenses: number;
     }[];
@@ -27,12 +27,15 @@ export const AreaVariant = ({ data }: Props) => {
                     </linearGradient>
                 </defs>
                 <XAxis 
-                    axisLine={false}
-                    tickLine={false}
-                    dataKey="date"
-                    tickFormatter={(value) => format(value, "dd MMM")}
-                    style={{ fontSize: 12 }}
-                    tickMargin={16}
+                     axisLine={false}
+                     tickLine={false}
+                     dataKey="date"
+                     tickFormatter={(value) => {
+                         const date = new Date(value); // Ensure the value is parsed as a Date object
+                         return isNaN(date.getTime()) ? "Invalid Date" : format(date, "dd MMM");
+                     }}
+                     style={{ fontSize: 12 }}
+                     tickMargin={16}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
