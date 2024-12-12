@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AreaChart, BarChart, FileSearch, LineChart } from "lucide-react";
+import { FileSearch, PieChart, Radar, Target} from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";   
 import { AreaVariant } from "@/components/area-variant";
@@ -8,14 +8,13 @@ import { LineVariant } from "@/components/line-variant";
 
 type Props = {
     data?: {
-        date: string;
-        income: number;
-        expenses: number;
+        name: string;
+        value: number;
     }[];
 };
 
 export const SpendingPie = ({ data = [] }: Props) => {
-    const [chartType, setChartType] = useState("area");
+    const [chartType, setChartType] = useState("pie");
 
     const onTypeChange = (type: string) => {
         //ToDo: ADD a paywall
@@ -25,7 +24,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
         <Card className="border-none drop-shadow-sm">
             <CardHeader className="flex space-y-2 lg:space-y-0 lg:flex-row lg:items-center justify-between">
                 <CardTitle className="text-xl line-clamp-1">
-                    Transactions
+                    Categories
                 </CardTitle>
                 <Select 
                     defaultValue={chartType}
@@ -35,27 +34,27 @@ export const SpendingPie = ({ data = [] }: Props) => {
                         <SelectValue placeholder="Chart type" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="area">
+                        <SelectItem value="pie">
                             <div className="flex items-center">
-                                <AreaChart className="size-4 mr-2 shrink-0" />
+                                <PieChart className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                    Area Chart
+                                    Pie Chart
                                 </p>
                             </div>
                         </SelectItem>
-                        <SelectItem value="line">
+                        <SelectItem value="radar">
                             <div className="flex items-center">
-                                <LineChart className="size-4 mr-2 shrink-0" />
+                                <Radar className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                    Line Chart
+                                    Radar Chart
                                 </p>
                             </div>
                         </SelectItem>
-                        <SelectItem value="bar">
+                        <SelectItem value="radial">
                             <div className="flex items-center">
-                                <BarChart className="size-4 mr-2 shrink-0" />
+                                <Target className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                    Bar Chart
+                                    Radial Chart
                                 </p>
                             </div>
                         </SelectItem>
@@ -72,9 +71,9 @@ export const SpendingPie = ({ data = [] }: Props) => {
                     </div>
                 ) : (
                     <>
-                        {chartType === "area" && <AreaVariant data={data} />}
-                        {chartType === "line" && <LineVariant data={data} />}
-                        {chartType === "bar" && <BarVariant data={data} />}
+                        {chartType === "pie" && <AreaVariant data={data} />}
+                        {chartType === "radar" && <LineVariant data={data} />}
+                        {chartType === "radial" && <BarVariant data={data} />}
                     </>
                 )}
             </CardContent>
