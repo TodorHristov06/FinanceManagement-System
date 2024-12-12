@@ -1,18 +1,21 @@
-"use client"; // Mark this component to be rendered on the client side
+"use client"; 
 
-import { Button } from "@/components/ui/button"; // Import Button component from UI library
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import Card components for layout
-import { Loader2, Plus, Upload } from "lucide-react"; // Import icons for loading and adding
-import { columns } from "./columns"; // Import column definitions for the table
-import { DataTable } from "@/components/data-table"; // Import DataTable component for displaying transactions
-import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component for loading state
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; 
+import { Loader2, Plus, Upload } from "lucide-react"; 
+import { columns } from "./columns";
+import { DataTable } from "@/components/data-table"; 
+import { Skeleton } from "@/components/ui/skeleton"; 
 import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-delete-transactions";
 import { useGetTransactions } from "@/features/transactions/api/use-get-transactions";
-import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Import hook for creating new transactions
+import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; 
+import { useSelectAccount } from "@/features/accounts/hooks/use-select-account";
 import { useState } from "react";
 import { UploadButton } from "./upload-button";
-import { on } from "events";
 import { ImportCard } from "./import-card";
+import { transactions as transactionsSchema } from "@/db/schema";
+import { toast } from "sonner";
+import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
 
 enum VARIANTS {
     LIST = "LIST",
@@ -26,6 +29,7 @@ const INITIAL_IMPORT_RESULTS = {
 }
 
 const TransactionsPage = () => {
+    const [AccountDialog, confirm] = useSelectAccount();
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
     const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
@@ -40,14 +44,36 @@ const TransactionsPage = () => {
         setVariant(VARIANTS.LIST);
     }
 
-    const newTransaction = useNewTransaction(); // Hook to manage new transaction creation
-    const deleteTransactions = useBulkDeleteTransactions(); // Hook to handle bulk delete of transactions
-    const transactionsQuery = useGetTransactions(); // Hook to fetch transaction data
-    const transactions = transactionsQuery.data || []; // Use fetched transactions data or empty array
+    const newTransaction = useNewTransaction(); 
+    const createTransactions = useBulkCreateTransactions();
+    const deleteTransactions = useBulkDeleteTransactions(); 
+    const transactionsQuery = useGetTransactions(); 
+    const transactions = transactionsQuery.data || []; 
 
     const isDisabled =
     transactionsQuery.isLoading ||
-    deleteTransactions.isPending; // Disable actions if data is loading or deletion is in progress
+    deleteTransactions.isPending; 
+
+    const onSubmitImport = async (
+        values: typeof transactionsSchema.$inferInsert[],
+    ) => {
+        const accountId = await confirm();
+
+        if (!accountId) {
+            return toast.error("Please select an account to continue");
+        }
+
+        const data = values.map((values) => ({
+            ...values,
+            accountId: accountId as string,
+        })) 
+
+        createTransactions.mutate(data, {
+            onSuccess: () => {
+                onCancelImport();
+            },
+        });
+    };
 
     if (transactionsQuery.isLoading) {
         return(
@@ -69,10 +95,11 @@ const TransactionsPage = () => {
     if (variant === VARIANTS.IMPORT) {
         return (
             <>
+                <AccountDialog />
                 <ImportCard
                     data={importResults.data}
                     onCancel={onCancelImport}
-                    onSubmit={() => {}}
+                    onSubmit={onSubmitImport}
                 />
             </>
         )
