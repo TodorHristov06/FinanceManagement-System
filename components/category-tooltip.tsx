@@ -1,12 +1,11 @@
-import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 export const CategoryTooltip = ({ active, payload }: any) => {
-    if (!active || !payload || payload.length < 2) return null;
+    if (!active) return null;
 
-    const name = payload[0]?.payload?.name;
-    const value = payload.find((item: any) => item.dataKey === "income")?.value || 0;
+    const name = payload[0].payload.name;
+    const value = payload[0].value;
 
     return (
         <div className="rounded-sm bg-white shadow-sm border overflow-hidden">
