@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AreaChart, FileSearch } from "lucide-react";
+import { AreaChart, FileSearch, LineChart } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";   
 import { AreaVariant } from "@/components/area-variant";
@@ -40,6 +40,14 @@ export const Chart = ({ data = [] }: Props) => {
                                 <AreaChart className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
                                     Area Chart
+                                </p>
+                            </div>
+                        </SelectItem>
+                        <SelectItem value="line">
+                            <div className="flex items-center">
+                                <LineChart className="size-4 mr-2 shrink-0" />
+                                <p className="line-clamp-1">
+                                    Line Chart
                                 </p>
                             </div>
                         </SelectItem>
