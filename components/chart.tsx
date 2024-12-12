@@ -71,9 +71,11 @@ export const Chart = ({ data = [] }: Props) => {
                         </p>
                     </div>
                 ) : (
-                    //<AreaVariant data={data} />
-                    //<BarVariant data={data} />
-                    <LineVariant data={data} />
+                    <>
+                        {chartType === "area" && <AreaVariant data={data} />}
+                        {chartType === "line" && <LineVariant data={data} />}
+                        {chartType === "bar" && <BarVariant data={data} />}
+                    </>
                 )}
             </CardContent>
         </Card>
