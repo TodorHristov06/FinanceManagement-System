@@ -42,6 +42,15 @@ export const AreaVariant = ({ data }: Props) => {
                     fill="url(#income)"
                     className="drop-shadow-sm"
                 />
+                <Area
+                    type="monotone"
+                    dataKey="expenses"
+                    stackId="expenses"
+                    strokeWidth={2}
+                    stroke="#f43f5e"
+                    fill="url(#expenses)"
+                    className="drop-shadow-sm"
+                />
             </AreaChart>
         </ResponsiveContainer>
     )
