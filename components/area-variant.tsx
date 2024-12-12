@@ -33,6 +33,15 @@ export const AreaVariant = ({ data }: Props) => {
                     style={{ fontSize: 12 }}
                     tickMargin={16}
                 />
+                <Area
+                    type="monotone"
+                    dataKey="income"
+                    stackId="income"
+                    strokeWidth={2}
+                    stroke="#3d82f6"
+                    fill="url(#income)"
+                    className="drop-shadow-sm"
+                />
             </AreaChart>
         </ResponsiveContainer>
     )

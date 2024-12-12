@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";   
 import { FileSearch } from "lucide-react";
-import { AreaVariant } from "./area-variant";
+import { AreaVariant } from "@/components/area-variant";
 
 type Props = {
     data?: {
