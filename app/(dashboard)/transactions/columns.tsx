@@ -8,7 +8,6 @@ import { InferResponseType } from "hono"; // Type inference for the API response
 import { client } from "@/lib/hono"; // Import client for API communication
 import { Actions } from "./actions"; // Import Actions component for each row
 import { format } from "date-fns";
-import { parse } from "path";
 import { formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { CategoryColumn } from "./category-column";
