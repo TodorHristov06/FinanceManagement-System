@@ -38,6 +38,7 @@ export const DateFilter = () => {
         const query = {
             from: format(dateRange?.from || defaultFrom, "yyyy-MM-dd"),
             to: format(dateRange?.to || defaultTo, "yyyy-MM-dd"),
+            accountId
         }
 
         const url = qs.stringifyUrl({
@@ -85,8 +86,18 @@ export const DateFilter = () => {
                         onClick={onReset} 
                         disabled={!date?.from || !date?.to} 
                         className="w-full" 
-                        variant="outline">
+                        variant="outline"
+                        >
                             Reset
+                        </Button>
+                    </PopoverClose>
+                    <PopoverClose asChild>
+                        <Button 
+                        onClick={() => pushToUrl(date)} 
+                        disabled={!date?.from || !date?.to} 
+                        className="w-full" 
+                        >
+                            Apply
                         </Button>
                     </PopoverClose>
                 </div>
