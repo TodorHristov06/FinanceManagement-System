@@ -33,7 +33,7 @@ export const useEditTransaction = (id?: string) => {
             toast.success("Transaction updated"); // Displaying success notification.
             queryClient.invalidateQueries({ queryKey: ["transaction", { id }] }); // Refreshing the cache for the specific transaction.
             queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Refreshing the cache for the transactions list.
-            //TODO: invalidate summary and transactions 
+            queryClient.invalidateQueries({ queryKey: ["summary"] }); 
         },
         // Handling errors
         onError: () => {
