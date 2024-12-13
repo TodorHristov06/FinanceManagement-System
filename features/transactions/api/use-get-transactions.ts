@@ -3,6 +3,7 @@ import {  useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 // Importing the API client to handle requests
 import { client } from "@/lib/hono";
+import { convertAmountFromMiliunits } from "@/lib/utils";
 
 // Custom hook for fetching all transactions
 export const useGetTransactions = () => {
@@ -29,7 +30,12 @@ export const useGetTransactions = () => {
             }
             // Parses and returns the JSON data from the response
             const { data } = await response.json();
-            return data;
+            return data.map((transaction) => ({
+                ...transaction,
+                amount: convertAmountFromMiliunits(transaction.amount),
+   
+            }));
+            // return data;
         }
     })
 

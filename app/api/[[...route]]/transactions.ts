@@ -8,8 +8,6 @@ import { eq, and, inArray, gte, lte, desc, sql } from "drizzle-orm";
 import {zValidator} from "@hono/zod-validator";
 import { z } from "zod";
 import { parse, subDays } from "date-fns";
-import { date } from "drizzle-orm/mysql-core";
-
 
 const app = new Hono()
 
