@@ -25,7 +25,11 @@ export const DateFilter = () => {
     const defaultTo = new Date();
     const defaultFrom = subDays(defaultTo, 30);
 
-    
+    const paramState = {
+        from: from ? new Date(from) : defaultFrom,
+        to: to ? new Date(to) : defaultTo,
+    };
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -37,7 +41,7 @@ export const DateFilter = () => {
                   hover:bg-white/20 hover:text-white border-none focus:ring-offset-0 focus:ring-transparent 
                     outline-none text-white focus:bg-white/30 transition"
                 >
-                    <span>{}</span>
+                    <span>{formatDateRange(paramState)}</span>
                 </Button>
             </PopoverTrigger>
         </Popover>
