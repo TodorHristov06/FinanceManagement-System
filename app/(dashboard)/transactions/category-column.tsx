@@ -2,7 +2,6 @@ import { useOpenCategory } from "@/features/categories/hooks/use-open-category";
 import { TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
-import { on } from "events";
 
 type Props = {
     id: string;

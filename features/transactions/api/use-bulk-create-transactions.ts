@@ -23,7 +23,7 @@ export const useBulkCreateTransactions = () => {
         onSuccess: () => {
             toast.success("Transactions created"); // Show success toast on creation
             queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalidate the transactions query to refetch data
-            //TODO: invalidate summary
+            queryClient.invalidateQueries({ queryKey: ["summary"] });
         },
         onError: () => {
             toast.error("Failed to create transactions"); // Show error toast on failure
