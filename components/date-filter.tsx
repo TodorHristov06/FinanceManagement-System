@@ -30,6 +30,25 @@ export const DateFilter = () => {
         to: to ? new Date(to) : defaultTo,
     };
 
+    const [date, setDate] = useState<DateRange | undefined>(
+        paramState
+    );
+
+    const pushToUrl = (dateRange: DateRange | undefined) => {
+        const query = {
+            from: format(dateRange?.from || defaultFrom, "yyyy-MM-dd"),
+            to: format(dateRange?.to || defaultTo, "yyyy-MM-dd"),
+        }
+
+        const url = qs.stringifyUrl({
+            url: pathname,
+            query,
+        }, { skipEmptyString: true, skipNull: true });
+
+        router.push(url);
+    }
+
+
     return (
         <Popover>
             <PopoverTrigger asChild>
