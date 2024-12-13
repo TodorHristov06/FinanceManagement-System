@@ -48,6 +48,11 @@ export const DateFilter = () => {
         router.push(url);
     }
 
+    const onReset = () => {
+        setDate(undefined);
+        pushToUrl(undefined);
+    }
+
 
     return (
         <Popover>
@@ -61,8 +66,20 @@ export const DateFilter = () => {
                     outline-none text-white focus:bg-white/30 transition"
                 >
                     <span>{formatDateRange(paramState)}</span>
+                    <ChevronDown className="ml-2 size-4 opacity-50" />
                 </Button>
             </PopoverTrigger>
+            <PopoverContent className="lg:w-auto w-full p-0" align="start">
+                <Calendar
+                    disabled={false}
+                    initialFocus
+                    mode="range"
+                    defaultMonth={date?.from}
+                    selected={date}
+                    onSelect={setDate}
+                    numberOfMonths={2}
+                />
+            </PopoverContent>
         </Popover>
     )
 }
