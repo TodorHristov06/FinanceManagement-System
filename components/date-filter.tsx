@@ -14,9 +14,32 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger, PopoverClose } from "@/components/ui/popover"
 
 export const DateFilter = () => {
-    return (
-        <div>
+    const router = useRouter();
+    const pathname = usePathname();
 
-        </div>
+    const params = useSearchParams();
+    const accountId = params.get("accountId") || "all"
+    const from = params.get("from") || ""
+    const to = params.get("to") || "";
+
+    const defaultTo = new Date();
+    const defaultFrom = subDays(defaultTo, 30);
+
+    
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    disabled={false}
+                    size="sm"
+                    variant="outline"
+                    className="lg:w-auto w-full h-9 rounded-md px-3 font-normal bg-white/10
+                  hover:bg-white/20 hover:text-white border-none focus:ring-offset-0 focus:ring-transparent 
+                    outline-none text-white focus:bg-white/30 transition"
+                >
+                    <span>{}</span>
+                </Button>
+            </PopoverTrigger>
+        </Popover>
     )
 }
