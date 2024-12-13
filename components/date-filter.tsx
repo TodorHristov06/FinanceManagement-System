@@ -79,6 +79,17 @@ export const DateFilter = () => {
                     onSelect={setDate}
                     numberOfMonths={2}
                 />
+                <div className="p-4 w-full flex items-center gap-x-2">
+                    <PopoverClose asChild>
+                        <Button 
+                        onClick={onReset} 
+                        disabled={!date?.from || !date?.to} 
+                        className="w-full" 
+                        variant="outline">
+                            Reset
+                        </Button>
+                    </PopoverClose>
+                </div>
             </PopoverContent>
         </Popover>
     )
