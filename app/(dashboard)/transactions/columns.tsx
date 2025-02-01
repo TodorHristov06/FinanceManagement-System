@@ -1,12 +1,12 @@
-"use client"; // Mark this component to be rendered on the client side
+"use client";
 
-import { Button } from "@/components/ui/button"; // Import Button component from UI library
-import { ColumnDef } from "@tanstack/react-table"; // Import ColumnDef for defining table columns
-import { ArrowUpDown} from "lucide-react"; // Import sorting icon
-import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox component from UI library       
-import { InferResponseType } from "hono"; // Type inference for the API response
-import { client } from "@/lib/hono"; // Import client for API communication
-import { Actions } from "./actions"; // Import Actions component for each row
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown} from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";  
+import { InferResponseType } from "hono";
+import { client } from "@/lib/hono";
+import { Actions } from "./actions";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -14,13 +14,11 @@ import { CategoryColumn } from "./category-column";
 import { AccountColumn } from "./account-column";
 
 
-// Define response type from API to infer account data shape
 export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"] [0]
 
-// Define table columns
 export const columns: ColumnDef<ResponseType>[] = [
   {
-    id: "select", // Define the 'select' column for selecting rows
+    id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -38,8 +36,8 @@ export const columns: ColumnDef<ResponseType>[] = [
         aria-label="Select row"
       />
     ),
-    enableSorting: false, // Disable sorting for this column
-    enableHiding: false, // Disable hiding for this column
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "date",
@@ -55,8 +53,8 @@ export const columns: ColumnDef<ResponseType>[] = [
       const date = new Date(row.getValue("date")) as Date;
       return (
         <span>
-          {format(date, "dd MMM, yyyy")}
-        </span>
+          {format(date, "dd MMM, yyyy")} 
+        </span> // Format date
       )
     }
   },
@@ -133,7 +131,7 @@ export const columns: ColumnDef<ResponseType>[] = [
     }
   },
   {
-    id: "actions", // Define the 'actions' column for each row
-    cell: ({ row }) => <Actions id={row.original.id} /> // Render the Actions component with the account ID
+    id: "actions",
+    cell: ({ row }) => <Actions id={row.original.id} /> // Render actions for each row
   }
 ]

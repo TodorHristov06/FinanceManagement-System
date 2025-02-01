@@ -14,19 +14,19 @@ export const CategoryColumn = ({
     category, 
     categoryId
 }: Props) => {
-    const { onOpen: onOpenCategory } = useOpenCategory();
-    const { onOpen: onOpenTransaction } = useOpenTransaction();
+    const { onOpen: onOpenCategory } = useOpenCategory(); // Hook to open category details
+    const { onOpen: onOpenTransaction } = useOpenTransaction(); // Hook to open transaction details
     const onClick = () => {
         if (categoryId) {
-            onOpenCategory(categoryId)
+            onOpenCategory(categoryId) // Open category details if categoryId exists
         } else {
-            onOpenTransaction(id)
+            onOpenTransaction(id) // Open transaction details if no categoryId
         }
     }
     return (
         <div 
         onClick={onClick}
-        className={cn("flex items-center cursor-pointer hover:underline", !category && "text-rose-500")} // Red color for Uncategorized"flex items-center cursor-pointer hover:underline"
+        className={cn("flex items-center cursor-pointer hover:underline", !category && "text-rose-500")}
         >
             {!category && <TriangleAlert className="mr-2 size-4 shrink-0"/>}
             {category || "Uncategorized" }
