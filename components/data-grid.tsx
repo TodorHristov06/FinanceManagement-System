@@ -8,14 +8,22 @@ import { useSearchParams } from "next/navigation"
 import { Skeleton } from "./ui/skeleton"
 import { DataCard } from "@/components/data-card"
 import { Card, CardContent, CardHeader } from "./ui/card"
+
+// DataGrid component renders a grid of data cards summarizing financial data
 export const DataGrid = () => {
+    // Fetch summary data with loading state using custom hook
     const {data, isLoading} = useGetSummary();
+
+    // Get query parameters for date range filtering
     const params = useSearchParams()
     const to = params.get("to") || undefined
     const from = params.get("from") || undefined
 
+    // Format the date range label for display
     const dateRangeLabel = formatDateRange({ to, from })
 
+
+    // If the data is still loading, display skeleton loaders as placeholders for the data cards
     if (isLoading) {
         return (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
@@ -25,6 +33,8 @@ export const DataGrid = () => {
             </div>
         ) 
     }
+
+    // When data is available, render actual DataCards displaying financial summary
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
             <DataCard
@@ -55,7 +65,7 @@ export const DataGrid = () => {
     )
 }
 
-
+// DataCardLoading is a placeholder component to show skeleton loaders while fetching data
 export const DataCardLoading = () => {
     return (
         <Card className="border-none drop-shadow-sm">

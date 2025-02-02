@@ -7,6 +7,7 @@ import { Filters } from "@/components/filters";
 
 export const Header = () => {
     return (
+        // Header container with gradient background and padding
         <header className="bg-gradient-to-b from-blue-700 to-blue-500 px-4 py-8 lg:px-14 pb-36">
             <div className="max-w-screen-2xl mx-auto">
                 <div className="w-full flex items-center justify-between mb-14">

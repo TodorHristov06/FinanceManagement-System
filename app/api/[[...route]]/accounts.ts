@@ -1,4 +1,3 @@
-// Import required libraries and modules
 import { Hono } from "hono";
 import { db } from "@/db/drizzle";
 import { createId} from "@paralleldrive/cuid2";

@@ -1,10 +1,9 @@
-// Importing necessary libraries and components
 import { z } from "zod";  
 import { Loader2 } from "lucide-react";
 import { insertTransactionSchema } from "@/db/schema";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";  // UI components for sheet layout
-import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction"; // Custom hook to manage the opening of the New Transaction sheet
-import { useCreateTransaction } from "@/features/transactions/api/use-create-transaction";  // Custom hook to handle transaction creation
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
+import { useCreateTransaction } from "@/features/transactions/api/use-create-transaction";
 import { useCreateCategory } from "@/features/categories/api/use-create-category";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
@@ -17,45 +16,58 @@ import { TransactionForm } from "@/features/transactions/components/transaction-
 const formSchema = insertTransactionSchema.omit({
     id: true,
 })
+
 // Defining the type of form values based on the schema
 type FormValues = z.input<typeof formSchema>
-
 
 export const NewTransactionSheet = () => {
     // Using custom hook to manage the visibility of the New Transaction sheet
     const { isOpen, onClose } = useNewTransaction();
+
     // Mutation hook for creating a new transaction
     const createMutation = useCreateTransaction();
+
     // Form submission handler to create a new transaction
     const categoryQuery = useGetCategories();
     const categoryMutation = useCreateCategory();
+
+    // Handler for creating a new category
     const onCreateCategory = (name: string) => categoryMutation.mutate({ 
         name 
     });
+
+    // Preparing category options for the form
     const categoryOptions = (categoryQuery.data ?? []).map((category) => ({ 
         label: category.name, 
         value: category.id 
     }));
 
+    // Fetching accounts and creating new ones
     const accountQuery = useGetAccounts();
     const accountMutation = useCreateAccount();
+
+    // Handler for creating a new account
     const onCreateAccount = (name: string) => accountMutation.mutate({ 
         name 
     });
+
+    // Preparing account options for the form
     const accountOptions = (accountQuery.data ?? []).map((account) => ({ 
         label: account.name, 
         value: account.id 
     }));
 
+    // Checking if any of the mutations or queries are pending
     const isPending = createMutation.isPending || categoryMutation.isPending || accountMutation.isPending;
 
+    // Checking if any of the queries are loading
     const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
 
-
+    // Form submission handler to create a new transaction
     const onSubmit = (values: FormValues) => {
         createMutation.mutate(values, {
             onSuccess: () => {
-                onClose(); // Close the sheet on successful transaction creation
+                onClose();
             }
         });
     };

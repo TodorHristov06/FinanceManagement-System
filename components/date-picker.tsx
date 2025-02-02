@@ -12,6 +12,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
+// Defining the props for the DatePicker component
 type Props = {
     value?: Date;
     onChange?: SelectSingleEventHandler;
@@ -19,9 +20,9 @@ type Props = {
 }
 
 export const DatePicker = ({ 
-    value, 
-    onChange, 
-    disabled, 
+    value,                  // Current selected date
+    onChange,               // Function to handle date change
+    disabled,               // Whether the date picker is disabled
 }: Props) => {
     return(
     <Popover>

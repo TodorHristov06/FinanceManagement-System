@@ -1,7 +1,7 @@
-import { InferRequestType, InferResponseType } from "hono"; // Importing helpers for type inference
-import { useMutation, useQueryClient } from "@tanstack/react-query"; // Importing React Query hooks
-import { toast } from "sonner"; // Importing toast notifications
-import { client } from "@/lib/hono"; // Importing the Hono API client
+import { InferRequestType, InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { client } from "@/lib/hono";
 
 // Inferring the types for request and response from the Hono API endpoint
 type ResponseType = InferResponseType<typeof client.api.transactions["bulk-delete"]["$post"]>;
@@ -9,7 +9,7 @@ type RequestType = InferRequestType<typeof client.api.transactions["bulk-delete"
 
 // Custom hook for handling bulk deletion of transactions
 export const useBulkDeleteTransactions = () => {
-    const queryClient = useQueryClient(); // React Query client for cache management
+    const queryClient = useQueryClient();
     // Using the mutation hook to handle the deletion
     const mutation = useMutation<
         ResponseType,
@@ -17,16 +17,16 @@ export const useBulkDeleteTransactions = () => {
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.transactions["bulk-delete"]["$post"]({ json }); // Sending the API request
-            return await response.json(); // Parsing the response JSON
+            const response = await client.api.transactions["bulk-delete"]["$post"]({ json });
+            return await response.json();
         }, 
         onSuccess: () => {
-            toast.success("Transactions deleted"); // Show success toast on deletion
-            queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalidate the transactions query to refetch data
+            toast.success("Transactions deleted");
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
             queryClient.invalidateQueries({ queryKey: ["summary"] });
         },
         onError: () => {
-            toast.error("Failed to delete transactions"); // Show error toast on failure
+            toast.error("Failed to delete transactions");
         },
     })
 

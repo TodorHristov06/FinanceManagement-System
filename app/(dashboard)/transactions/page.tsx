@@ -18,8 +18,8 @@ import { toast } from "sonner";
 import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
 
 enum VARIANTS {
-    LIST = "LIST",
-    IMPORT = "IMPORT"
+    LIST = "LIST", // Display transaction list
+    IMPORT = "IMPORT" // Display import UI
 }
 
 const INITIAL_IMPORT_RESULTS = {
@@ -29,16 +29,18 @@ const INITIAL_IMPORT_RESULTS = {
 }
 
 const TransactionsPage = () => {
-    const [AccountDialog, confirm] = useSelectAccount();
-    const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
-    const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
+    const [AccountDialog, confirm] = useSelectAccount(); // Hook to select an account
+    const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST); // Track current UI variant
+    const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS); // Store import 
 
+    // Handle file upload
     const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
         console.log(results);
         setImportResults(results);
-        setVariant(VARIANTS.IMPORT);
+        setVariant(VARIANTS.IMPORT); // Switch to import UI
     }
 
+    // Cancel import and return to list view
     const onCancelImport = () => {
         setImportResults(INITIAL_IMPORT_RESULTS);
         setVariant(VARIANTS.LIST);
@@ -54,10 +56,11 @@ const TransactionsPage = () => {
     transactionsQuery.isLoading ||
     deleteTransactions.isPending; 
 
+    // Handle import submission
     const onSubmitImport = async (
         values: typeof transactionsSchema.$inferInsert[],
     ) => {
-        const accountId = await confirm();
+        const accountId = await confirm(); // Prompt user to select an account
 
         if (!accountId) {
             return toast.error("Please select an account to continue");
@@ -65,12 +68,12 @@ const TransactionsPage = () => {
 
         const data = values.map((values) => ({
             ...values,
-            accountId: accountId as string,
+            accountId: accountId as string, // Add accountId to each transaction
         })) 
 
         createTransactions.mutate(data, {
             onSuccess: () => {
-                onCancelImport();
+                onCancelImport(); // Return to list view after successful import
             },
         });
     };
@@ -80,11 +83,11 @@ const TransactionsPage = () => {
             <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
                 <Card className="border-none drop-shadow-sm">
                     <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
-                        <Skeleton className="h-8 w-48"/>
+                        <Skeleton className="h-8 w-48"/> {/* Loading skeleton for header */}
                     </CardHeader>
                     <CardContent>
                         <div className="h-[500px] w-full flex justify-center items-center">
-                            <Loader2 className="size-6 text-slate-300 animate-spin" />
+                            <Loader2 className="size-6 text-slate-300 animate-spin" /> {/* Loading spinner */}
                         </div>
                     </CardContent>
                 </Card>
@@ -105,6 +108,7 @@ const TransactionsPage = () => {
         )
     }
 
+    // Default list view
     return (
         <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
             <Card className="border-none drop-shadow-sm">
@@ -133,7 +137,7 @@ const TransactionsPage = () => {
                             const ids = row.map((r) => r.original.id); 
                             deleteTransactions.mutate({ids});
                         }}
-                        disabled={isDisabled}
+                        disabled={isDisabled} // Disable actions during loading or deletion
                     />
                 </CardContent>
             </Card>

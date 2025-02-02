@@ -2,8 +2,9 @@ import { formatCurrency } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 export const CategoryTooltip = ({ active, payload }: any) => {
-    if (!active) return null;
+    if (!active) return null; // Return nothing if tooltip is not active
 
+    // Extract the name & value of the category
     const name = payload[0].payload.name;
     const value = payload[0].value;
 

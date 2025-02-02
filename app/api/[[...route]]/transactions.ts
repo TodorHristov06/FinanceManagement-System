@@ -11,6 +11,7 @@ import { parse, subDays } from "date-fns";
 
 const app = new Hono()
 
+    // GET transactions with optional filters (date range, accountId)
     .get(
         "/",
         zValidator("query", z.object({
@@ -18,7 +19,7 @@ const app = new Hono()
             to: z.string().optional(),
             accountId: z.string().optional(),
         })),
-        clerkMiddleware(), 
+        clerkMiddleware(),  // Ensure user is authenticated
          async (c) => {
             const auth = getAuth(c);
             const { from, to, accountId } = c.req.valid("query")
@@ -61,6 +62,7 @@ const app = new Hono()
 
             return c.json({ data });
     })
+    // GET a specific transaction by ID
     .get(
         "/:id",
         zValidator("param", z.object({
@@ -101,6 +103,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // POST to create a new transaction
     .post(
         "/",
         clerkMiddleware(),
@@ -121,6 +124,7 @@ const app = new Hono()
 
             return c.json({ data })
     })
+    // POST to bulk create transactions
     .post(
         "/bulk-create",
         clerkMiddleware(),
@@ -151,6 +155,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // POST to bulk delete transactions
     .post(
         "/bulk-delete",
         clerkMiddleware(),
@@ -190,6 +195,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // PATCH to update a transaction by ID
     .patch(
         "/:id", 
         clerkMiddleware(),
@@ -243,6 +249,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // DELETE a transaction by ID
     .delete(
         "/:id", 
         clerkMiddleware(),

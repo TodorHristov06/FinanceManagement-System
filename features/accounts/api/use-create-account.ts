@@ -1,32 +1,31 @@
-import { InferRequestType, InferResponseType } from "hono"; // Import helpers for type inference
-import { useMutation, useQueryClient } from "@tanstack/react-query"; // Import React Query hooks
-import { toast } from "sonner"; // Import toast notifications
-import { client } from "@/lib/hono"; // Import the Hono API client
+import { InferRequestType, InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { client } from "@/lib/hono";
 
-// Inferring the types for request and response from the Hono API endpoint
+// Defining the types for request and response from the Hono API endpoint
 type ResponseType = InferResponseType<typeof client.api.accounts.$post>;
 type RequestType = InferRequestType<typeof client.api.accounts.$post>["json"];
 
-// Custom hook for handling account creation
+// Hook for account creation
 export const useCreateAccount = () => {
-    const queryClient = useQueryClient(); // React Query client for cache management
+    const queryClient = useQueryClient();
 
-    // Using the mutation hook to handle the account creation
     const mutation = useMutation<
         ResponseType,
         Error,
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.accounts.$post({ json }); // Sending the API request to create the account
-            return await response.json(); // Parsing the response JSON
+            const response = await client.api.accounts.$post({ json });
+            return await response.json();
         }, 
         onSuccess: () => {
-            toast.success("Account created"); // Show success toast on creation
-            queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Invalidate the accounts query to refetch data
+            toast.success("Account created");
+            queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Refresh accounts data
         },
         onError: () => {
-            toast.error("Failed to create account"); // Show error toast on failure
+            toast.error("Failed to create account");
         },
     })
 

@@ -10,6 +10,7 @@ import { z } from "zod";
 
 const app = new Hono()
 
+    // GET all categories for the authenticated user
     .get(
         "/",
         clerkMiddleware(), 
@@ -28,6 +29,7 @@ const app = new Hono()
             .where(eq(categories.userId, auth.userId));
             return c.json({ data });
     })
+    // GET a single category by ID
     .get(
         "/:id",
         zValidator("param", z.object({
@@ -59,6 +61,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // POST to create a new category
     .post(
         "/",
         clerkMiddleware(),
@@ -79,6 +82,7 @@ const app = new Hono()
             }).returning(); 
             return c.json({ data })
     })
+    // POST to bulk delete categories
     .post(
         "/bulk-delete",
         clerkMiddleware(),
@@ -110,6 +114,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // PATCH to update a category by ID
     .patch(
         "/:id", 
         clerkMiddleware(),
@@ -152,6 +157,7 @@ const app = new Hono()
             return c.json({ data });
         }
     )
+    // DELETE to remove a category by ID
     .delete(
         "/:id", 
         clerkMiddleware(),

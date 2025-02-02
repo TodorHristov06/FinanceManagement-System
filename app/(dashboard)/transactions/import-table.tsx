@@ -2,10 +2,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { TableHeadSelect } from "./table-head-select";
 
 type Props = {
-    headers: string[];
-    body: string[][];
-    selectedColumns: Record<string, string | null>;
-    onTableHeadSelectChange: (columnIndex: number, value: string | null) => void;
+    headers: string[]; // Array of CSV headers
+    body: string[][]; // Array of CSV rows
+    selectedColumns: Record<string, string | null>; // Track selected columns for mapping
+    onTableHeadSelectChange: (columnIndex: number, value: string | null) => void; // Callback for column selection changes
 }
 
 export const ImportTable = ({
@@ -35,8 +35,8 @@ export const ImportTable = ({
                         <TableRow key={index}>
                             {row.map((cell, index) => (
                                 <TableCell key={index}>
-                                    {cell}
-                                </TableCell>
+                                    {cell} 
+                                </TableCell> // Render each cell
                             ))}
                         </TableRow>
                     ))}

@@ -3,8 +3,10 @@ import { formatCurrency } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 export const CustomTooltip = ({ active, payload }: any) => {
+    // Return null if the tooltip is not active or there's insufficient data
     if (!active || !payload || payload.length < 2) return null;
 
+    // Extract the date, income, and expenses from the payload
     const date = payload[0]?.payload?.date;
     const income = payload.find((item: any) => item.dataKey === "income")?.value || 0;
     const expenses = payload.find((item: any) => item.dataKey === "expenses")?.value || 0;

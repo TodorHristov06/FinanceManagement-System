@@ -7,7 +7,7 @@ type Props = {
         date: string;
         income: number;
         expenses: number;
-    }[];
+    }[]; // Data structure for income and expenses over time
 };
 
 export const BarVariant = ({ data }: Props) => {

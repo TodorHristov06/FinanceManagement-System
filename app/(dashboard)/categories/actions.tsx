@@ -1,27 +1,26 @@
-"use client" // Mark this component to be rendered on the client side
+"use client"
 
-import { Edit, MoreHorizontal, Trash } from "lucide-react"; // Import icons for edit, menu, and trash actions
-import { Button } from "@/components/ui/button"; // Import Button component from UI library
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"; // Import dropdown menu components
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import { useDeleteCategory } from "@/features/categories/api/use-delete-category"; // Import hook to handle category deletion
-import { useOpenCategory } from "@/features/categories/hooks/use-open-category"; // Import hook to handle opening an category
-import { useConfirm } from "@/hooks/use-confirm"; // Import custom hook for confirmation dialogs
+import { useDeleteCategory } from "@/features/categories/api/use-delete-category";
+import { useOpenCategory } from "@/features/categories/hooks/use-open-category";
+import { useConfirm } from "@/hooks/use-confirm";
 
 type Props = {
-    id: string // Define type for the component's props, specifically the category ID
+    id: string // Category ID passed as a prop
 }
 export const Actions = ({id}: Props) => {
-    const[ConfirmDialog, confirm] = useConfirm( "Are you sure?", "You are about to delete this category."); // Use confirmation dialog for delete action
-    const deleteMutation = useDeleteCategory(id); // Hook to manage category deletion
-    const { onOpen } = useOpenCategory(); // Hook to manage opening an category
+    const[ConfirmDialog, confirm] = useConfirm( "Are you sure?", "You are about to delete this category.");
+    const deleteMutation = useDeleteCategory(id); // Hook to handle category deletion
+    const { onOpen } = useOpenCategory(); // Hook to handle opening a category for editing
 
-     // Handle the delete action with confirmation
     const handleDelete = async() => {
-        const ok = await confirm(); // Wait for confirmation dialog result
+        const ok = await confirm(); // Show confirmation dialog
 
         if (ok) {
-            deleteMutation.mutate(); // Trigger delete mutation if confirmed
+            deleteMutation.mutate(); // Delete category if confirmed
         }
     }
 

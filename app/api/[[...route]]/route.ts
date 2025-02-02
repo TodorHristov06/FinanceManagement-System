@@ -1,4 +1,3 @@
-// Import necessary modules
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import accounts from "./accounts";
