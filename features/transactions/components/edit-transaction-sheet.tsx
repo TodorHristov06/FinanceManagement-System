@@ -16,6 +16,7 @@ import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { ne } from "drizzle-orm";
 
 
+// Defining the form schema for the transaction, excluding the id
 const formSchema = insertTransactionSchema.omit({
     id: true,
 })
@@ -23,13 +24,18 @@ type FormValues = z.input<typeof formSchema>
 
 
 export const EditTransactionSheet = () => {
+    // Open/close state and transaction ID from the custom hook
     const { isOpen, onClose, id } = useOpenTransaction();
     const [ConfirmDialog, confirm] = useConfirm("Are you sure>", "You are about to delete this transaction.");
     
+    // Fetch transaction data using the ID
     const transactionQuery = useGetTransaction(id)
+
+    // Mutation hooks for editing and deleting the transaction
     const editMutation = useEditTransaction(id)
     const deleteMutation = useDeleteTransaction(id)
 
+    // Fetch categories and create new ones
     const categoryQuery = useGetCategories();
     const categoryMutation = useCreateCategory();
     const onCreateCategory = (name: string) => categoryMutation.mutate({ 
@@ -40,6 +46,7 @@ export const EditTransactionSheet = () => {
         value: category.id 
     }));
 
+    // Fetch accounts and create new ones
     const accountQuery = useGetAccounts();
     const accountMutation = useCreateAccount();
     const onCreateAccount = (name: string) => accountMutation.mutate({ 
@@ -50,6 +57,7 @@ export const EditTransactionSheet = () => {
         value: account.id 
     }));
 
+    // Checking if any of the mutations or queries are pending
     const isPending = 
     editMutation.isPending || 
     deleteMutation.isPending ||
@@ -57,11 +65,13 @@ export const EditTransactionSheet = () => {
     categoryMutation.isPending ||
     accountMutation.isPending
 
+    // Checking if any of the queries are loading
     const isLoading = 
         transactionQuery.isLoading ||
         categoryQuery.isLoading ||
         accountQuery.isLoading
 
+    // Handling form submission to update the transaction
     const onSubmit = (values: FormValues) => {
         editMutation.mutate(values, {
             onSuccess: () => {
@@ -70,12 +80,10 @@ export const EditTransactionSheet = () => {
         });
     };
 
+    // Handling deletion of the transaction with confirmation
     const onDelete = async() => {
-
         const ok = await confirm();
-
         if (ok) {
-
             deleteMutation.mutate(undefined, {
                 onSuccess: () => {
                     onClose(); 
@@ -84,6 +92,7 @@ export const EditTransactionSheet = () => {
         }
     }
 
+    // Default form values when transaction data is available
     const defaultValues = transactionQuery.data ? {
         accountId: transactionQuery.data.accountId,
         categoryId: transactionQuery.data.categoryId,

@@ -1,18 +1,18 @@
-// Importing necessary libraries and components
-import { z } from "zod";  // For schema validation
-import { Trash } from "lucide-react";  // Trash icon from Lucide
-import { useForm } from "react-hook-form";  // React hook for managing forms
-import { zodResolver } from "@hookform/resolvers/zod";  // Resolver for integrating Zod with react-hook-form
-import { Input } from "@/components/ui/input";  // Custom Input component
+import { z } from "zod";
+import { Trash } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/date-picker";
-import { Button } from "@/components/ui/button";  // Custom Button component
+import { Button } from "@/components/ui/button";
 import { Select } from "@/components/select";
-import { insertTransactionSchema } from "@/db/schema";  // Importing the schema for validation
-import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
+import { insertTransactionSchema } from "@/db/schema";
+import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { AmountInput } from "@/components/amount-input";
 import { convertAmountToMiliunits } from "@/lib/utils";
 
+// Defining the form schema for client-side validation
 const formSchema = z.object({
     date: z.coerce.date(),
     accountId: z.string(),
@@ -22,6 +22,7 @@ const formSchema = z.object({
     notes: z.string().nullable().optional(),
 })
 
+// API schema omitting 'id' field as it's not required for new transactions
 const apiSchema = insertTransactionSchema.omit({
     id: true
 })
@@ -53,16 +54,19 @@ export const TransactionForm = ({
     onCreateCategory
 }: Props) => {
 
+    // Initializing the form with react-hook-form and integrating Zod validation
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema), 
         defaultValues: defaultValues, 
     })
 
+    // Handle form submission
     const handleSubmit = (values: FormValues) => {
         const amount = parseFloat(values.amount);
         const amountInMiliunits = convertAmountToMiliunits(amount);
         console.log({ values });
 
+        // Submit the form with converted amount
         onSubmit({
             ...values,
             amount: amountInMiliunits,
@@ -71,7 +75,7 @@ export const TransactionForm = ({
 
     // Handle account deletion
     const handleDelete = () => {
-        onDelete?.(); // If onDelete function is provided, it gets called
+        onDelete?.();
     }
 
     return (
