@@ -1,40 +1,37 @@
 // Importing types and libraries
-import { InferRequestType, InferResponseType } from "hono"; // For extracting types from the Hono API client.
-import { useMutation, useQueryClient } from "@tanstack/react-query"; // For managing async requests and caching.
-import { toast } from "sonner"; // For displaying notifications.
-import { client } from "@/lib/hono"; // Hono client for API interactions.
+import { InferRequestType, InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { client } from "@/lib/hono";
 
 // Defining the response type for the DELETE request
 type ResponseType = InferResponseType<typeof client.api.categories[":id"]["$delete"]>;
 
 // Defining a hook for deleting an category
 export const useDeleteCategory = (id?: string) => {
-    const queryClient = useQueryClient(); // Access to React Query's cache.
+    const queryClient = useQueryClient();
 
     // Initializing useMutation for the delete operation
     const mutation = useMutation<
-        ResponseType, // Type for the response
-        Error // Type for the error
+        ResponseType,
+        Error
     >({
-        // Function to execute the API request
         mutationFn: async () => {
-            // Executes a DELETE request to the API with the provided ID
             const response = await client.api.categories[":id"]["$delete"]({ 
-                param: { id } // Passing the ID as a parameter.
+                param: { id }
             }); 
-            return await response.json(); // Returning the JSON response.
+            return await response.json();
         },
-        // Handling successful deletion
+        // Handling successful deletion / Refreshing the cache
         onSuccess: () => {
-            toast.success("Category deleted"); // Displaying success notification.
-            queryClient.invalidateQueries({ queryKey: ["category", { id }] }); // Refreshing the cache for the specific category.
-            queryClient.invalidateQueries({ queryKey: ["categories"] }); // Refreshing the cache for the categories list.
+            toast.success("Category deleted");
+            queryClient.invalidateQueries({ queryKey: ["category", { id }] });
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
             queryClient.invalidateQueries({ queryKey: ["transactions"] });
             queryClient.invalidateQueries({ queryKey: ["summary"] });
         },
-        // Handling errors
         onError: () => {
-            toast.error("Failed to delete category"); // Displaying error notification.
+            toast.error("Failed to delete category");
         },
     })
 

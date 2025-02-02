@@ -1,7 +1,7 @@
-import { InferRequestType, InferResponseType } from "hono"; // Import helpers for type inference
-import { useMutation, useQueryClient } from "@tanstack/react-query"; // Import React Query hooks
-import { toast } from "sonner"; // Import toast notifications
-import { client } from "@/lib/hono"; // Import the Hono API client
+import { InferRequestType, InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { client } from "@/lib/hono";
 
 // Inferring the types for request and response from the Hono API endpoint
 type ResponseType = InferResponseType<typeof client.api.categories.$post>;
@@ -18,15 +18,15 @@ export const useCreateCategory = () => {
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.categories.$post({ json }); // Sending the API request to create the category
-            return await response.json(); // Parsing the response JSON
+            const response = await client.api.categories.$post({ json });
+            return await response.json();
         }, 
         onSuccess: () => {
-            toast.success("Category created"); // Show success toast on creation
+            toast.success("Category created");
             queryClient.invalidateQueries({ queryKey: ["categories"] }); // Invalidate the categories query to refetch data
         },
         onError: () => {
-            toast.error("Failed to create category"); // Show error toast on failure
+            toast.error("Failed to create category");
         },
     })
 
