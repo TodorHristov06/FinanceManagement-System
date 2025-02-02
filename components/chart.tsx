@@ -12,13 +12,14 @@ type Props = {
         date: string;
         income: number;
         expenses: number;
-    }[];
+    }[]; // Data prop contains the transactions, with income and expenses
 };
 
 export const Chart = ({ data = [] }: Props) => {
-    const [chartType, setChartType] = useState("area");
+    const [chartType, setChartType] = useState("area"); // Default chart type is "area"
 
     const onTypeChange = (type: string) => {
+        // Function to handle the change of chart type
         //ToDo: ADD a paywall
         setChartType(type);
     }
@@ -83,6 +84,7 @@ export const Chart = ({ data = [] }: Props) => {
     )
 }
 
+// A loading placeholder for the chart while data is being fetched
 export const ChartLoading = () => {
     return (
         <Card className="border-none drop-shadow-sm">

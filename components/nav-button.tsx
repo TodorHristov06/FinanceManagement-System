@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"  // Importing Button component to create a custom button
-import Link from "next/link"  // Importing Link component from Next.js for client-side navigation
-import { cn } from "@/lib/utils"  // Importing cn function (likely a utility for conditional classnames)
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 type Props = {
     href: string  // The URL the button will navigate to
@@ -14,7 +14,7 @@ export const NavButton = ({href, label, isActive}: Props) => {
             "w-full lg:w-auto justify-between font-normal hover:bg-white/20 hover:text-white border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-white focus:bg-white/30 transition" ,
              isActive ? "bg-white/10 text-white" : "bg-transparent",)}>
             <Link href={href}>
-                {label} {/* The text label of the button */}
+                {label}
             </Link>
         </Button>
     )

@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { Tooltip, XAxis, LineChart, Line, ResponsiveContainer, CartesianGrid } from "recharts";
 import { CustomTooltip } from "@/components/custom-tooltip";
 
+// Define the props structure for the component 
 type Props = {
     data: {
         date: string;
@@ -10,6 +11,7 @@ type Props = {
     }[];
 };
 
+// LineVariant component: A responsive line chart visualizing income and expenses over time  
 export const LineVariant = ({ data }: Props) => {
     return (
         <ResponsiveContainer width="100%" height={350}>
@@ -32,14 +34,14 @@ export const LineVariant = ({ data }: Props) => {
                     dataKey="income"
                     stroke="#3d82f6"
                     strokeWidth={2}
-                    className="drop=shadow-sm"
+                    className="drop-shadow-sm"
                 />
                 <Line
                     dot={false}
                     dataKey="expenses"
                     stroke="#f43f5e"
                     strokeWidth={2}
-                    className="drop=shadow-sm"
+                    className="drop-shadow-sm"
                 />
             </LineChart>
         </ResponsiveContainer>

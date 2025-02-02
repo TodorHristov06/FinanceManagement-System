@@ -2,7 +2,7 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recha
 import { formatPercentage } from "@/lib/utils";
 import { CategoryTooltip } from "@/components/category-tooltip";
 
-const COLORS = ["#0066FF", "#12C6FF", "#FF647F", "#FF9354"];
+const COLORS = ["#0066FF", "#12C6FF", "#FF647F", "#FF9354"]; // Preset colors for pie chart segments
 
 type Props = {
     data: {

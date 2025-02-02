@@ -16,10 +16,12 @@ export const AmountInput = forwardRef<HTMLInputElement, Props>((
     { value, onChange, placeholder, disabled }: Props,
     ref
 ) => {
+    // Parsing the value to determine if it's income or expense
     const parseValue = parseFloat(value);
     const isIncome = parseValue > 0;
     const isExpense = parseValue < 0;
 
+    // Function to reverse the amount (toggle between positive and negative)
     const onReverseValue = () => {
         if (!value) return;
 

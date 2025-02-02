@@ -14,10 +14,12 @@ type Props = {
     }[];
 };
 
+// Main component to display spending data in different chart types
 export const SpendingPie = ({ data = [] }: Props) => {
     const [chartType, setChartType] = useState("pie");
 
     const onTypeChange = (type: string) => {
+         // Change chart type when a new type is selected
         //ToDo: ADD a paywall
         setChartType(type);
     }
