@@ -1,8 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// Ensure the API key is loaded from the environment
+if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
+  throw new Error("GEMINI_API_KEY is not defined in the environment variables.");
+}
 
-// Function to scan a receipt
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+
 export const scanReceipt = async (file: File) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -64,7 +68,6 @@ export const scanReceipt = async (file: File) => {
     throw new Error("Failed to scan receipt");
   }
 };
-
 // Hook to use the scanReceipt function
 export const useScanReceipt = () => {
   const scan = async (file: File) => {
