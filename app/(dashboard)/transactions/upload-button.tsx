@@ -1,31 +1,42 @@
 import { Upload } from "lucide-react";
 import { useCSVReader } from "react-papaparse";
 import { Button } from "@/components/ui/button";
-import { useScanReceipt } from "@/features/transactions/api/use-scan-receipt"; // Import the receipt scanning hook
-import { useToast } from "@/hooks/use-toast"; // For toast notifications
+import { scanReceipt } from "@/features/transactions/api/use-scan-receipt";
+import { useToast } from "@/hooks/use-toast";
 
 type Props = {
-  onUpload: (results: any) => void; // Callback for handling uploaded CSV data
-  onReceiptUpload?: (receiptData: any) => void; // Optional callback for handling receipt data
+  onUpload: (results: any) => void;
+  onReceiptUpload?: (receiptData: any) => void;
 };
 
 export const UploadButton = ({ onUpload, onReceiptUpload }: Props) => {
-  const { CSVReader } = useCSVReader(); // Hook for CSV file reading
-  const { scan } = useScanReceipt(); // Hook for receipt scanning
-  const { toast } = useToast(); // Toast notifications
+  const { CSVReader } = useCSVReader();
+  const scan = scanReceipt;
+  const { toast } = useToast();
 
-  // Handle receipt file upload
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      console.log("Selected file:", file); // Log the selected file
+      handleReceiptUpload(file);
+    }
+  };
+
   const handleReceiptUpload = async (file: File) => {
     try {
       const receiptData = await scan(file); // Scan the receipt
+      console.log("Scanned receipt data:", receiptData); // Log the scanned data
+
       if (onReceiptUpload) {
         onReceiptUpload(receiptData); // Pass the scanned data to the callback
       }
+
       toast({
         title: "Receipt Scanned Successfully",
-        description: `Amount: ${receiptData.amount}, Merchant: ${receiptData.merchantName}`,
+        description: `Amount: ${receiptData.amount}, Merchant: ${receiptData.payee}`,
       });
     } catch (error) {
+      console.error("Error scanning receipt:", error); // Log the error
       toast({
         title: "Error Scanning Receipt",
         description: "Failed to scan the receipt. Please try again.",
@@ -34,23 +45,14 @@ export const UploadButton = ({ onUpload, onReceiptUpload }: Props) => {
     }
   };
 
-  // Handle file input change
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      handleReceiptUpload(file); // Handle receipt image upload
-    }
-  };
-
   return (
     <div className="flex gap-2">
-      {/* CSV Upload Button */}
       <CSVReader onUploadAccepted={onUpload}>
         {({ getRootProps }: any) => (
           <Button
             size="sm"
             className="w-full lg:w-auto"
-            {...getRootProps()} // Spread root props for file upload
+            {...getRootProps()}
           >
             <Upload className="size-4 mr-2" />
             Import CSV
@@ -58,7 +60,6 @@ export const UploadButton = ({ onUpload, onReceiptUpload }: Props) => {
         )}
       </CSVReader>
 
-      {/* Receipt Upload Button */}
       <Button size="sm" className="w-full lg:w-auto" asChild>
         <label htmlFor="receipt-upload">
           <Upload className="size-4 mr-2" />
