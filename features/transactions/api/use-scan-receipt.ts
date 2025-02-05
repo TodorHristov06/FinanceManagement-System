@@ -36,13 +36,13 @@ export const scanReceipt = async (file: File) => {
 
   // Call the AI API
   const result = await model.generateContent([
+    prompt,
     {
       inlineData: {
         data: base64String,
         mimeType: file.type,
       },
     },
-    prompt,
   ]);
 
   const response = await result.response;
