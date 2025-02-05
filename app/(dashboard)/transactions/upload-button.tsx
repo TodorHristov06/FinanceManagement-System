@@ -24,7 +24,7 @@ export const UploadButton = ({ onUpload, onReceiptUpload }: Props) => {
 
   const handleReceiptUpload = async (file: File) => {
     try {
-      const receiptData = await scan(file); // Scan the receipt
+      const receiptData = await scan(file);
       console.log("Scanned receipt data:", receiptData); // Log the scanned data
 
       if (onReceiptUpload) {

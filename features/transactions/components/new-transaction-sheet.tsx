@@ -11,6 +11,7 @@ import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { TransactionForm } from "@/features/transactions/components/transaction-form";
 import { scanReceipt } from "@/features/transactions/api/use-scan-receipt"; // Import the receipt scanning hook
 import { useToast } from "@/hooks/use-toast"; // For toast notifications
+import { useRef, MutableRefObject } from "react"; // Import useRef and MutableRefObject
 
 // Defining the form schema, picking only the 'name' field for validation
 const formSchema = insertTransactionSchema.omit({
@@ -29,6 +30,7 @@ export const NewTransactionSheet = () => {
   const accountMutation = useCreateAccount();
   const scan = scanReceipt;
   const { toast } = useToast();
+  const transactionFormRef = useRef<{ prefillForm: (data: any) => void } | null>(null); // Create a ref for the TransactionForm
 
   const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
     label: category.name,
@@ -54,7 +56,6 @@ export const NewTransactionSheet = () => {
   const handleReceiptUpload = async (file: File) => {
     try {
       const receiptData = await scan(file);
-
       const formValues: FormValues = {
         amount: receiptData.amount,
         date: new Date(receiptData.date),
@@ -63,7 +64,12 @@ export const NewTransactionSheet = () => {
         accountId: accountOptions[0]?.value || "",
         notes: receiptData.note,
       };
-      
+
+      // Prefill the form with the scanned receipt data
+      if (transactionFormRef.current) {
+        transactionFormRef.current.prefillForm(formValues); // Use formValues instead of receiptData
+      }
+
       toast({
         title: "Receipt Scanned Successfully",
         description: `Amount: ${receiptData.amount}, Merchant: ${receiptData.payee}`,
@@ -90,6 +96,7 @@ export const NewTransactionSheet = () => {
           </div>
         ) : (
           <TransactionForm
+            ref={transactionFormRef}
             onSubmit={onSubmit}
             disabled={isPending}
             categoryOptions={categoryOptions}

@@ -11,6 +11,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "
 import { Textarea } from "@/components/ui/textarea";
 import { AmountInput } from "@/components/amount-input";
 import { convertAmountToMiliunits } from "@/lib/utils";
+import { forwardRef, useImperativeHandle } from "react";
 
 const formSchema = z.object({
   date: z.coerce.date(),
@@ -41,7 +42,9 @@ type Props = {
   onReceiptUpload?: (file: File) => void;
 };
 
-export const TransactionForm = ({
+export const TransactionForm = forwardRef<{
+  prefillForm: (data: any) => void;
+} | null, Props>(({
   id,
   defaultValues,
   onSubmit,
@@ -52,17 +55,21 @@ export const TransactionForm = ({
   onCreateAccount,
   onCreateCategory,
   onReceiptUpload,
-}: Props) => {
+}, ref) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
 
+  useImperativeHandle(ref, () => ({
+    prefillForm,
+  }));
+
   const handleSubmit = (values: FormValues) => {
     const amount = parseFloat(values.amount);
     const amountInMiliunits = convertAmountToMiliunits(amount);
     console.log({ values });
-
+  
     onSubmit({
       ...values,
       amount: amountInMiliunits,
@@ -83,14 +90,14 @@ export const TransactionForm = ({
   const prefillForm = (receiptData: {
     amount: number;
     date: Date;
-    description: string;
+    note: string; // Changed from description to note
     category: string;
-    merchantName: string;
+    payee: string; // Changed from merchantName to payee
   }) => {
     form.setValue("amount", receiptData.amount.toString());
     form.setValue("date", receiptData.date);
-    form.setValue("payee", receiptData.merchantName);
-    form.setValue("notes", receiptData.description);
+    form.setValue("payee", receiptData.payee); // Changed from merchantName to payee
+    form.setValue("notes", receiptData.note); // Changed from description to note
 
     const matchedCategory = categoryOptions.find(
       (opt) => opt.label.toLowerCase() === receiptData.category.toLowerCase()
@@ -258,4 +265,4 @@ export const TransactionForm = ({
       </form>
     </Form>
   );
-};
+});
