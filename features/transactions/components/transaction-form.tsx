@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { AmountInput } from "@/components/amount-input";
 import { convertAmountToMiliunits } from "@/lib/utils";
 import { forwardRef, useImperativeHandle } from "react";
+import { scanReceipt } from "../api/use-scan-receipt";
 
 const formSchema = z.object({
   date: z.coerce.date(),
@@ -80,10 +81,25 @@ export const TransactionForm = forwardRef<{
     onDelete?.();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && onReceiptUpload) {
-      onReceiptUpload(file);
+    if (!file) return;
+
+    try {
+      // Show loading state if needed
+      const receiptData = await scanReceipt(file);
+      
+      if (receiptData) {
+        prefillForm(receiptData);
+      }
+
+      // Call the original onReceiptUpload if provided
+      if (onReceiptUpload) {
+        onReceiptUpload(file);
+      }
+    } catch (error) {
+      console.error('Error processing receipt:', error);
+      // Handle error (show toast notification, etc.)
     }
   };
 
@@ -94,19 +110,55 @@ export const TransactionForm = forwardRef<{
     category: string;
     payee: string; // Changed from merchantName to payee
   }) => {
-    form.setValue("amount", receiptData.amount.toString());
-    form.setValue("date", receiptData.date);
-    form.setValue("payee", receiptData.payee); // Changed from merchantName to payee
-    form.setValue("notes", receiptData.note); // Changed from description to note
+    try {
+      // Format amount to string with 2 decimal places
+      const formattedAmount = receiptData.amount.toFixed(2);
+      form.setValue("amount", formattedAmount);
 
-    const matchedCategory = categoryOptions.find(
-      (opt) => opt.label.toLowerCase() === receiptData.category.toLowerCase()
-    );
-    if (matchedCategory) {
-      form.setValue("categoryId", matchedCategory.value);
+      // Ensure date is a valid Date object
+      const parsedDate = new Date(receiptData.date);
+      if (!isNaN(parsedDate.getTime())) {
+        form.setValue("date", parsedDate);
+      }
+
+      // Set payee if not empty
+      if (receiptData.payee && receiptData.payee.trim()) {
+        form.setValue("payee", receiptData.payee.trim());
+      }
+
+      // Set notes if not empty
+      if (receiptData.note && receiptData.note.trim()) {
+        form.setValue("notes", receiptData.note.trim());
+      }
+
+      // Match and set category
+      if (receiptData.category) {
+        const matchedCategory = categoryOptions.find(
+          (opt) => opt.label.toLowerCase() === receiptData.category.toLowerCase()
+        );
+        if (matchedCategory) {
+          form.setValue("categoryId", matchedCategory.value);
+        }
+      }
+
+      // Trigger form validation
+      form.trigger();
+      
+      console.log("Updated form values:", {
+        amount: formattedAmount,
+        date: parsedDate,
+        payee: receiptData.payee,
+        notes: receiptData.note,
+        category: receiptData.category
+      });
+    } catch (error) {
+      console.error("Error prefilling form:", error);
     }
+  };
 
-    console.log("Prefilled form values:", form.getValues()); // Debugging: Log the form values
+  // Add this new function to handle button click
+  const handleUploadClick = () => {
+    document.getElementById('receipt-upload')?.click();
   };
 
   return (
@@ -114,20 +166,24 @@ export const TransactionForm = forwardRef<{
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
         {onReceiptUpload && (
           <div className="flex justify-center">
-            <label htmlFor="receipt-upload" className="cursor-pointer">
-              <Button type="button" variant="outline" disabled={disabled}>
-                <Upload className="size-4 mr-2" />
-                Upload Receipt
-              </Button>
-              <input
-                id="receipt-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-                disabled={disabled}
-              />
-            </label>
+            <Button 
+              type="button" 
+              variant="outline" 
+              disabled={disabled}
+              onClick={handleUploadClick}
+              className="w-full md:w-auto"
+            >
+              <Upload className="size-4 mr-2" />
+              Upload Receipt
+            </Button>
+            <input
+              id="receipt-upload"
+              type="file"
+              accept="image/png,image/jpeg,image/jpg"
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={disabled}
+            />
           </div>
         )}
 
