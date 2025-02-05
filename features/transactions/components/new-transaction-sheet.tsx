@@ -9,7 +9,7 @@ import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { TransactionForm } from "@/features/transactions/components/transaction-form";
-import { useScanReceipt } from "@/features/transactions/api/use-scan-receipt"; // Import the receipt scanning hook
+import { scanReceipt } from "@/features/transactions/api/use-scan-receipt"; // Import the receipt scanning hook
 import { useToast } from "@/hooks/use-toast"; // For toast notifications
 
 // Defining the form schema, picking only the 'name' field for validation
@@ -27,7 +27,7 @@ export const NewTransactionSheet = () => {
   const categoryMutation = useCreateCategory();
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();
-  const { scan } = useScanReceipt();
+  const scan = scanReceipt;
   const { toast } = useToast();
 
   const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
@@ -58,14 +58,15 @@ export const NewTransactionSheet = () => {
       const formValues: FormValues = {
         amount: receiptData.amount,
         date: new Date(receiptData.date),
-        payee: receiptData.merchantName,
+        payee: receiptData.payee,
         categoryId: categoryOptions.find(opt => opt.label.toLowerCase() === receiptData.category.toLowerCase())?.value || "",
         accountId: accountOptions[0]?.value || "",
-        notes: receiptData.description,
+        notes: receiptData.note,
       };
+      
       toast({
         title: "Receipt Scanned Successfully",
-        description: `Amount: ${receiptData.amount}, Merchant: ${receiptData.merchantName}`,
+        description: `Amount: ${receiptData.amount}, Merchant: ${receiptData.payee}`,
       });
     } catch (error) {
       toast({
