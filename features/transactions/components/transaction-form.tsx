@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Trash, Upload } from "lucide-react"; // Added Upload icon
+import { Trash, Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { AmountInput } from "@/components/amount-input";
 import { convertAmountToMiliunits } from "@/lib/utils";
 
-// Defining the form schema for client-side validation
 const formSchema = z.object({
   date: z.coerce.date(),
   accountId: z.string(),
@@ -22,7 +21,6 @@ const formSchema = z.object({
   notes: z.string().nullable().optional(),
 });
 
-// API schema omitting 'id' field as it's not required for new transactions
 const apiSchema = insertTransactionSchema.omit({
   id: true,
 });
@@ -40,7 +38,7 @@ type Props = {
   categoryOptions: { label: string; value: string }[];
   onCreateAccount: (name: string) => void;
   onCreateCategory: (name: string) => void;
-  onReceiptUpload?: (file: File) => void; // New prop for receipt upload
+  onReceiptUpload?: (file: File) => void;
 };
 
 export const TransactionForm = ({
@@ -53,45 +51,60 @@ export const TransactionForm = ({
   categoryOptions,
   onCreateAccount,
   onCreateCategory,
-  onReceiptUpload, // New prop for receipt upload
+  onReceiptUpload,
 }: Props) => {
-  // Initializing the form with react-hook-form and integrating Zod validation
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
 
-  // Handle form submission
   const handleSubmit = (values: FormValues) => {
     const amount = parseFloat(values.amount);
     const amountInMiliunits = convertAmountToMiliunits(amount);
     console.log({ values });
 
-    // Submit the form with converted amount
     onSubmit({
       ...values,
       amount: amountInMiliunits,
     });
   };
 
-  // Handle account deletion
   const handleDelete = () => {
     onDelete?.();
   };
 
-  // Handle receipt file upload
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && onReceiptUpload) {
-      onReceiptUpload(file); // Handle receipt image upload
+      onReceiptUpload(file);
     }
   };
 
+  const prefillForm = (receiptData: {
+    amount: number;
+    date: Date;
+    description: string;
+    category: string;
+    merchantName: string;
+  }) => {
+    form.setValue("amount", receiptData.amount.toString());
+    form.setValue("date", receiptData.date);
+    form.setValue("payee", receiptData.merchantName);
+    form.setValue("notes", receiptData.description);
+
+    const matchedCategory = categoryOptions.find(
+      (opt) => opt.label.toLowerCase() === receiptData.category.toLowerCase()
+    );
+    if (matchedCategory) {
+      form.setValue("categoryId", matchedCategory.value);
+    }
+
+    console.log("Prefilled form values:", form.getValues()); // Debugging: Log the form values
+  };
+
   return (
-    // The Form component is a wrapper for the react-hook-form
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
-        {/* Receipt Upload Button */}
         {onReceiptUpload && (
           <div className="flex justify-center">
             <label htmlFor="receipt-upload" className="cursor-pointer">
@@ -111,7 +124,6 @@ export const TransactionForm = ({
           </div>
         )}
 
-        {/* Date Picker */}
         <FormField
           name="date"
           control={form.control}
@@ -129,7 +141,6 @@ export const TransactionForm = ({
           )}
         />
 
-        {/* Account Select */}
         <FormField
           name="accountId"
           control={form.control}
@@ -151,7 +162,6 @@ export const TransactionForm = ({
           )}
         />
 
-        {/* Category Select */}
         <FormField
           name="categoryId"
           control={form.control}
@@ -173,7 +183,6 @@ export const TransactionForm = ({
           )}
         />
 
-        {/* Payee Input */}
         <FormField
           name="payee"
           control={form.control}
@@ -193,7 +202,6 @@ export const TransactionForm = ({
           )}
         />
 
-        {/* Amount Input */}
         <FormField
           name="amount"
           control={form.control}
@@ -212,7 +220,6 @@ export const TransactionForm = ({
           )}
         />
 
-        {/* Notes Textarea */}
         <FormField
           name="notes"
           control={form.control}
@@ -232,12 +239,10 @@ export const TransactionForm = ({
           )}
         />
 
-        {/* Submit Button */}
         <Button className="w-full" disabled={disabled}>
           {id ? "Save changes" : "Create transaction"}
         </Button>
 
-        {/* Delete Button (only shown if editing an existing transaction) */}
         {!!id && (
           <Button
             type="button"
