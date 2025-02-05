@@ -32,52 +32,53 @@ const TransactionsPage = () => {
     const [AccountDialog, confirm] = useSelectAccount(); // Hook to select an account
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST); // Track current UI variant
     const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS); // Store import 
-
+  
     // Handle file upload
     const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
-        console.log(results);
-        setImportResults(results);
-        setVariant(VARIANTS.IMPORT); // Switch to import UI
+      console.log(results);
+      setImportResults(results);
+      setVariant(VARIANTS.IMPORT); // Switch to import UI
     }
-
+  
     // Cancel import and return to list view
     const onCancelImport = () => {
-        setImportResults(INITIAL_IMPORT_RESULTS);
-        setVariant(VARIANTS.LIST);
+      setImportResults(INITIAL_IMPORT_RESULTS);
+      setVariant(VARIANTS.LIST);
     }
-
+  
     const newTransaction = useNewTransaction(); 
     const createTransactions = useBulkCreateTransactions();
     const deleteTransactions = useBulkDeleteTransactions(); 
     const transactionsQuery = useGetTransactions(); 
     const transactions = transactionsQuery.data || []; 
-
+  
     const isDisabled =
     transactionsQuery.isLoading ||
     deleteTransactions.isPending; 
-
+  
     // Handle import submission
     const onSubmitImport = async (
         values: typeof transactionsSchema.$inferInsert[],
     ) => {
         const accountId = await confirm(); // Prompt user to select an account
-
+  
         if (!accountId) {
             return toast.error("Please select an account to continue");
         }
-
+  
         const data = values.map((values) => ({
             ...values,
             accountId: accountId as string, // Add accountId to each transaction
         })) 
-
+  
         createTransactions.mutate(data, {
             onSuccess: () => {
                 onCancelImport(); // Return to list view after successful import
+                transactionsQuery.refetch(); // Refetch transactions to update the list
             },
         });
     };
-
+  
     if (transactionsQuery.isLoading) {
         return(
             <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
@@ -94,7 +95,7 @@ const TransactionsPage = () => {
             </div>
         )
     }
-
+  
     if (variant === VARIANTS.IMPORT) {
         return (
             <>
@@ -107,7 +108,7 @@ const TransactionsPage = () => {
             </>
         )
     }
-
+  
     // Default list view
     return (
         <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
@@ -143,6 +144,6 @@ const TransactionsPage = () => {
             </Card>
         </div>
     )   
-}
-
-export default TransactionsPage;
+  }
+  
+  export default TransactionsPage;
