@@ -56,25 +56,39 @@ export const NewTransactionSheet = () => {
   const handleReceiptUpload = async (file: File) => {
     try {
       const receiptData = await scan(file);
-      const formValues: FormValues = {
+      console.log('Raw receipt data:', receiptData);
+
+      if (!transactionFormRef.current) {
+        console.error('Form ref not available');
+        return;
+      }
+
+      // Find matching category
+      const matchingCategory = categoryOptions.find(
+        opt => opt.label.toLowerCase() === receiptData.category?.toLowerCase()
+      );
+
+      // Prepare form data with all required fields
+      const formData = {
         amount: receiptData.amount,
-        date: new Date(receiptData.date),
+        date: receiptData.date,
         payee: receiptData.payee,
-        categoryId: categoryOptions.find(opt => opt.label.toLowerCase() === receiptData.category.toLowerCase())?.value || "",
-        accountId: accountOptions[0]?.value || "",
-        notes: receiptData.note,
+        note: receiptData.note,
+        categoryId: matchingCategory?.value || '',
+        accountId: accountOptions[0]?.value || '', // Default to first account
       };
 
-      // Prefill the form with the scanned receipt data
-      if (transactionFormRef.current) {
-        transactionFormRef.current.prefillForm(formValues); // Use formValues instead of receiptData
-      }
+      console.log('Sending form data:', formData);
+      
+      // Fill the form
+      transactionFormRef.current.prefillForm(formData);
 
       toast({
         title: "Receipt Scanned Successfully",
-        description: `Amount: ${receiptData.amount}, Merchant: ${receiptData.payee}`,
+        description: `Amount: ${receiptData.amount}, Payee: ${receiptData.payee}`,
       });
     } catch (error) {
+      console.error('Receipt scanning error:', error);
       toast({
         title: "Error Scanning Receipt",
         description: "Failed to scan the receipt. Please try again.",

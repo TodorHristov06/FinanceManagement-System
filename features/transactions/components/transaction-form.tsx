@@ -62,6 +62,24 @@ export const TransactionForm = forwardRef<{
     defaultValues: defaultValues,
   });
 
+  const prefillForm = (data: any) => {
+    console.log('Prefilling form with data:', data);
+    
+    // Directly set form values
+    form.setValue('amount', data.amount.toString());
+    form.setValue('date', new Date(data.date));
+    form.setValue('payee', data.payee || '');
+    form.setValue('notes', data.note || '');
+    form.setValue('categoryId', data.categoryId || '');
+    form.setValue('accountId', data.accountId || '');
+
+    // Log the form values after setting
+    console.log('Form values after setting:', form.getValues());
+    
+    // Force form update
+    form.trigger();
+  };
+
   useImperativeHandle(ref, () => ({
     prefillForm,
   }));
@@ -90,7 +108,13 @@ export const TransactionForm = forwardRef<{
       const receiptData = await scanReceipt(file);
       
       if (receiptData) {
-        prefillForm(receiptData);
+        prefillForm({
+          ...receiptData,
+          amount: receiptData.amount.toString(),
+          note: String(receiptData.note || ''),
+          payee: String(receiptData.payee || ''),
+          category: String(receiptData.category || '')
+        });
       }
 
       // Call the original onReceiptUpload if provided
@@ -100,59 +124,6 @@ export const TransactionForm = forwardRef<{
     } catch (error) {
       console.error('Error processing receipt:', error);
       // Handle error (show toast notification, etc.)
-    }
-  };
-
-  const prefillForm = (receiptData: {
-    amount: number;
-    date: Date;
-    note: string; // Changed from description to note
-    category: string;
-    payee: string; // Changed from merchantName to payee
-  }) => {
-    try {
-      // Format amount to string with 2 decimal places
-      const formattedAmount = receiptData.amount.toFixed(2);
-      form.setValue("amount", formattedAmount);
-
-      // Ensure date is a valid Date object
-      const parsedDate = new Date(receiptData.date);
-      if (!isNaN(parsedDate.getTime())) {
-        form.setValue("date", parsedDate);
-      }
-
-      // Set payee if not empty
-      if (receiptData.payee && receiptData.payee.trim()) {
-        form.setValue("payee", receiptData.payee.trim());
-      }
-
-      // Set notes if not empty
-      if (receiptData.note && receiptData.note.trim()) {
-        form.setValue("notes", receiptData.note.trim());
-      }
-
-      // Match and set category
-      if (receiptData.category) {
-        const matchedCategory = categoryOptions.find(
-          (opt) => opt.label.toLowerCase() === receiptData.category.toLowerCase()
-        );
-        if (matchedCategory) {
-          form.setValue("categoryId", matchedCategory.value);
-        }
-      }
-
-      // Trigger form validation
-      form.trigger();
-      
-      console.log("Updated form values:", {
-        amount: formattedAmount,
-        date: parsedDate,
-        payee: receiptData.payee,
-        notes: receiptData.note,
-        category: receiptData.category
-      });
-    } catch (error) {
-      console.error("Error prefilling form:", error);
     }
   };
 
