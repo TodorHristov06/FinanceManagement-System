@@ -9,99 +9,118 @@ import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { TransactionForm } from "@/features/transactions/components/transaction-form";
-
-
+import { scanReceipt } from "@/features/transactions/api/use-scan-receipt"; // Import the receipt scanning hook
+import { useToast } from "@/hooks/use-toast"; // For toast notifications
+import { useRef, MutableRefObject } from "react"; // Import useRef and MutableRefObject
 
 // Defining the form schema, picking only the 'name' field for validation
 const formSchema = insertTransactionSchema.omit({
-    id: true,
-})
+  id: true,
+});
 
 // Defining the type of form values based on the schema
-type FormValues = z.input<typeof formSchema>
+type FormValues = z.input<typeof formSchema>;
 
 export const NewTransactionSheet = () => {
-    // Using custom hook to manage the visibility of the New Transaction sheet
-    const { isOpen, onClose } = useNewTransaction();
+  const { isOpen, onClose } = useNewTransaction();
+  const createMutation = useCreateTransaction();
+  const categoryQuery = useGetCategories();
+  const categoryMutation = useCreateCategory();
+  const accountQuery = useGetAccounts();
+  const accountMutation = useCreateAccount();
+  const scan = scanReceipt;
+  const { toast } = useToast();
+  const transactionFormRef = useRef<{ prefillForm: (data: any) => void } | null>(null); // Create a ref for the TransactionForm
 
-    // Mutation hook for creating a new transaction
-    const createMutation = useCreateTransaction();
+  const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
+    label: category.name,
+    value: category.id,
+  }));
 
-    // Form submission handler to create a new transaction
-    const categoryQuery = useGetCategories();
-    const categoryMutation = useCreateCategory();
+  const accountOptions = (accountQuery.data ?? []).map((account) => ({
+    label: account.name,
+    value: account.id,
+  }));
 
-    // Handler for creating a new category
-    const onCreateCategory = (name: string) => categoryMutation.mutate({ 
-        name 
+  const isPending = createMutation.isPending || categoryMutation.isPending || accountMutation.isPending;
+  const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
+
+  const onSubmit = (values: FormValues) => {
+    createMutation.mutate(values, {
+      onSuccess: () => {
+        onClose();
+      },
     });
+  };
 
-    // Preparing category options for the form
-    const categoryOptions = (categoryQuery.data ?? []).map((category) => ({ 
-        label: category.name, 
-        value: category.id 
-    }));
+  const handleReceiptUpload = async (file: File) => {
+    try {
+      const receiptData = await scan(file);
+      console.log('Raw receipt data:', receiptData);
 
-    // Fetching accounts and creating new ones
-    const accountQuery = useGetAccounts();
-    const accountMutation = useCreateAccount();
+      if (!transactionFormRef.current) {
+        console.error('Form ref not available');
+        return;
+      }
 
-    // Handler for creating a new account
-    const onCreateAccount = (name: string) => accountMutation.mutate({ 
-        name 
-    });
+      // Find matching category
+      const matchingCategory = categoryOptions.find(
+        opt => opt.label.toLowerCase() === receiptData.category?.toLowerCase()
+      );
 
-    // Preparing account options for the form
-    const accountOptions = (accountQuery.data ?? []).map((account) => ({ 
-        label: account.name, 
-        value: account.id 
-    }));
+      // Prepare form data with all required fields
+      const formData = {
+        amount: receiptData.amount,
+        date: receiptData.date,
+        payee: receiptData.payee,
+        note: receiptData.note,
+        categoryId: matchingCategory?.value || '',
+        accountId: accountOptions[0]?.value || '', // Default to first account
+      };
 
-    // Checking if any of the mutations or queries are pending
-    const isPending = createMutation.isPending || categoryMutation.isPending || accountMutation.isPending;
+      console.log('Sending form data:', formData);
+      
+      // Fill the form
+      transactionFormRef.current.prefillForm(formData);
 
-    // Checking if any of the queries are loading
-    const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
+      toast({
+        title: "Receipt Scanned Successfully",
+        description: `Amount: ${receiptData.amount}, Payee: ${receiptData.payee}`,
+      });
+    } catch (error) {
+      console.error('Receipt scanning error:', error);
+      toast({
+        title: "Error Scanning Receipt",
+        description: "Failed to scan the receipt. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
-    // Form submission handler to create a new transaction
-    const onSubmit = (values: FormValues) => {
-        createMutation.mutate(values, {
-            onSuccess: () => {
-                onClose();
-            }
-        });
-    };
-    return (
-        // The Sheet component that contains the form for creating a new transaction
-        <Sheet open={isOpen} onOpenChange={onClose}>
-            <SheetContent className="space-y-4">
-                <SheetHeader>
-                    <SheetTitle>
-                        New Transaction
-                    </SheetTitle>
-                    <SheetDescription>
-                        Add new transaction
-                    </SheetDescription>
-                </SheetHeader>
-                {isLoading
-                    ? (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <Loader2 className="size-4 text-muted-foreground animate-spin" />
-                        </div>
-                    )
-                    : (
-                        <TransactionForm
-                        onSubmit={onSubmit}  
-                        disabled={isPending}
-                        categoryOptions={categoryOptions}
-                        onCreateCategory={onCreateCategory}
-                        accountOptions={accountOptions}
-                        onCreateAccount={onCreateAccount}
-                        />  
-                    )
-                }
-                
-            </SheetContent>
-        </Sheet> 
-    );
+  return (
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent className="space-y-4">
+        <SheetHeader>
+          <SheetTitle>New Transaction</SheetTitle>
+          <SheetDescription>Add new transaction</SheetDescription>
+        </SheetHeader>
+        {isLoading ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="size-4 text-muted-foreground animate-spin" />
+          </div>
+        ) : (
+          <TransactionForm
+            ref={transactionFormRef}
+            onSubmit={onSubmit}
+            disabled={isPending}
+            categoryOptions={categoryOptions}
+            onCreateCategory={(name) => categoryMutation.mutate({ name })}
+            accountOptions={accountOptions}
+            onCreateAccount={(name) => accountMutation.mutate({ name })}
+            onReceiptUpload={handleReceiptUpload}
+          />
+        )}
+      </SheetContent>
+    </Sheet>
+  );
 };
