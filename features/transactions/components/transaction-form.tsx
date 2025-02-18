@@ -106,6 +106,7 @@ export const TransactionForm = forwardRef<{
     try {
       // Show loading state if needed
       const receiptData = await scanReceipt(file);
+      console.log("Scanned receipt data handledelete:", receiptData); // Log the scanned data
       
       if (receiptData) {
         prefillForm({
