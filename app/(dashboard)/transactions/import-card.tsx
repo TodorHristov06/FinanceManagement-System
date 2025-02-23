@@ -15,22 +15,22 @@ const requiredOptions = [
 ]
 
 interface SelectedColumnsState {
-    [key: string]: string | null;
+    [key: string]: string | null; // Track selected columns for mapping
 }
 type Props = {
-    data: string[][];
-    onCancel: () => void
-    onSubmit: (data: any) => void
+    data: string[][]; // CSV data (headers and rows)
+    onCancel: () => void // Callback for cancel action
+    onSubmit: (data: any) => void // Callback for submit action
 }
 export const ImportCard = ({
     data,
     onCancel,
     onSubmit, 
 }: Props) => {
-    const [selectedColumns, setSelectedColumns] = useState<SelectedColumnsState>({});
+    const [selectedColumns, setSelectedColumns] = useState<SelectedColumnsState>({}); // Track selected columns
 
-    const headers = data[0];
-    const body = data.slice(1);
+    const headers = data[0]; // Extract headers from CSV data
+    const body = data.slice(1); // Extract rows from CSV data
 
     const onTableHeadSelectChange = (
         columnIndex: number,
@@ -39,6 +39,7 @@ export const ImportCard = ({
         setSelectedColumns((prev) => {
             const newSelectedColumns = { ...prev };
 
+            // Clear any previous selection for the same value
             for (const key in newSelectedColumns) {
                 if (newSelectedColumns[key] === value) {
                     newSelectedColumns[key] = null;
@@ -55,7 +56,7 @@ export const ImportCard = ({
         })
     }
 
-    const progress = Object.values(selectedColumns).filter(Boolean).length;
+    const progress = Object.values(selectedColumns).filter(Boolean).length; // Track progress of required columns
 
     const handleContinue = () => {
         const getColumnIndex = (column: string) => {
@@ -79,17 +80,19 @@ export const ImportCard = ({
             }).filter((row) => row.length > 0)
         }
 
+        // Transform mapped data into an array of objects
         const arrayOfData = mappedData.body.map((row) => {
             return row.reduce((acc: any, cell, index) => {
                 const header = mappedData.headers[index];
                 if (header !== null) {
-                    acc[header] = cell;
+                    acc[header] = cell; // Map cell to header
                 }
 
                 return acc;
             }, {})
         })
 
+        // Format data for submission
         const formattedData = arrayOfData.map((item) => ({
             ...item,
             amount: convertAmountToMiliunits(parseFloat(item.amount)),

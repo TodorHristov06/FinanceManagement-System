@@ -30,11 +30,11 @@ import { Trash } from "lucide-react"
 
 // Defining the props for the DataTable component
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]  // Column definitions
-  data: TData[]                        // Data to be displayed in the table
-  filterKey: string                    // Column filter key (e.g., email)
+  columns: ColumnDef<TData, TValue>[]     // Column definitions
+  data: TData[]                           // Data to be displayed in the table
+  filterKey: string                       // Column filter key (e.g., email)
   onDelete: (rows: Row<TData>[]) => void  // Function for deleting selected rows
-  disabled?: boolean                   // If the delete button is disabled
+  disabled?: boolean                      // If the delete button is disabled
 }
 
 export function DataTable<TData, TValue>({

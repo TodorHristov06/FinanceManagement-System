@@ -1,12 +1,11 @@
-// Importing necessary libraries and components
-import { z } from "zod";  // For schema validation
-import { useForm } from "react-hook-form";  // React hook for managing forms
-import { zodResolver } from "@hookform/resolvers/zod";  // Resolver for integrating Zod with react-hook-form
-import { Trash } from "lucide-react";  // Trash icon from Lucide
-import { Input } from "@/components/ui/input";  // Custom Input component
-import { Button } from "@/components/ui/button";  // Custom Button component
-import { insertAccountSchema } from "@/db/schema";  // Importing the schema for validation
-import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Trash } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { insertAccountSchema } from "@/db/schema";
+import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";
 
 // Defining the schema for the form, only picking 'name' from the insertAccountSchema
 const formSchema = insertAccountSchema.pick({
@@ -34,8 +33,8 @@ export const AccountForm = ({
 }: Props) => {
     // Using react-hook-form to handle the form state, with validation from Zod
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema), // Integrating Zod schema for validation
-        defaultValues: defaultValues, // Setting default form values
+        resolver: zodResolver(formSchema),
+        defaultValues: defaultValues,
     })
 
     // Handle form submission
@@ -62,7 +61,7 @@ export const AccountForm = ({
                         </FormLabel>
                         <FormControl>
                             <Input 
-                            disabled={disabled} // Disables the input if the disabled prop is true
+                            disabled={disabled}
                             placeholder="e.g Cash, Bank, Credit Card" 
                             {...field}/> 
                         </FormControl>

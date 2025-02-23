@@ -11,7 +11,7 @@ import { calculatePercentageChange, fillMissingDays } from "@/lib/utils";
 const app = new Hono()
     .get(
         "/",
-        clerkMiddleware(),
+        clerkMiddleware(), // Middleware for authentication
         zValidator(
             "query",
             z.object({
@@ -21,13 +21,15 @@ const app = new Hono()
             })
         ),
         async (c) => {
-            const auth = getAuth(c);
+            const auth = getAuth(c); // Get the authenticated user
             const { from, to, accountId } = c.req.valid("query")
 
+            // Ensure user is authenticated
             if (!auth?.userId) {
                 return c.json({ error: "Unauthorized" }, 401);
             }
 
+            // Set default date range if no `from` or `to` parameters are provided
             const defaultTo = new Date();
             const defaultFrom = subDays(defaultTo, 30);
 
@@ -38,10 +40,12 @@ const app = new Hono()
                 ? parse(to, "yyyy-MM-dd", new Date()) 
                 : defaultTo;
 
+            // Calculate period length and previous period for comparison
             const periodLength = differenceInDays(endDate, startDate) + 1;
             const lastPeriodStart = subDays(startDate, periodLength);
             const lastPeriodEnd = subDays(endDate, periodLength);
 
+            // Function to fetch financial data (income, expenses, and remaining balance)
             async function fetchFinancialData(
                 userId: string,
                 startDate: Date,
@@ -65,17 +69,20 @@ const app = new Hono()
                     )
             }
 
+            // Fetch financial data for the current period
             const [currentPeriod] = await fetchFinancialData(
                 auth.userId,
                 startDate,
                 endDate
             );
+            // Fetch financial data for the last period for comparison
             const [lastPeriod] = await fetchFinancialData(
                 auth.userId,
                 lastPeriodStart,
                 lastPeriodEnd
             );
-            
+
+            // Calculate percentage change in income, expenses, and remaining balance
             const incomeChange = calculatePercentageChange(
                 currentPeriod.income,
                 lastPeriod.income
@@ -91,6 +98,7 @@ const app = new Hono()
                 lastPeriod.remaining
             )
 
+            // Fetch transaction categories and sum up expenses for each category
             const category = await db
                 .select({
                     name: categories.name,
@@ -113,6 +121,7 @@ const app = new Hono()
                     sql`SUM(ABS(${transactions.amount}))`
                 ));
             
+            // Get the top 3 categories and combine others into "Other"
             const topCategories = category.slice(0, 3);
             const otherCategories = category.slice(3);
             const otherSum = otherCategories
@@ -126,6 +135,7 @@ const app = new Hono()
                 })
             }
 
+            // Fetch daily transaction data to calculate active days and financial activities
             const activeDays = await db
                 .select({
                     date: transactions.date,
@@ -146,12 +156,14 @@ const app = new Hono()
                 .groupBy(transactions.date)
                 .orderBy(transactions.date);
             
+            // Fill missing days in the transaction data
             const days = fillMissingDays(
                 activeDays, 
                 startDate, 
                 endDate
             );
-                
+               
+            // Return the financial summary data as JSON
             return c.json({
                 data: {
                     remainingAmount: currentPeriod.remaining,

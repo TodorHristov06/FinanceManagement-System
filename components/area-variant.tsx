@@ -7,7 +7,7 @@ type Props = {
         date: string;
         income: number;
         expenses: number;
-    }[];
+    }[]; // Data structure for income and expense over time
 };
 
 

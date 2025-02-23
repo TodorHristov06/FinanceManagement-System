@@ -1,12 +1,12 @@
 // Importing necessary libraries and components
-import { z } from "zod";  // For schema validation
-import { useForm } from "react-hook-form";  // React hook for managing forms
-import { zodResolver } from "@hookform/resolvers/zod";  // Resolver for integrating Zod with react-hook-form
-import { Trash } from "lucide-react";  // Trash icon from Lucide
-import { Input } from "@/components/ui/input";  // Custom Input component
-import { Button } from "@/components/ui/button";  // Custom Button component
-import { insertCategorySchema } from "@/db/schema";  // Importing the schema for validation
-import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";  // Custom Form components
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Trash } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { insertCategorySchema } from "@/db/schema";
+import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";
 
 // Defining the schema for the form, only picking 'name' from the insertCategorySchema
 const formSchema = insertCategorySchema.pick({
@@ -34,22 +34,21 @@ export const CategoryForm = ({
 }: Props) => {
     // Using react-hook-form to handle the form state, with validation from Zod
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema), // Integrating Zod schema for validation
-        defaultValues: defaultValues, // Setting default form values
+        resolver: zodResolver(formSchema),
+        defaultValues: defaultValues,
     })
 
     // Handle form submission
     const handleSubmit = (values: FormValues) => {
-        onSubmit(values); // Calling the onSubmit function passed via props
+        onSubmit(values);
     }
 
     // Handle category deletion
     const handleDelete = () => {
-        onDelete?.(); // If onDelete function is provided, it gets called
+        onDelete?.();
     }
 
     return (
-        // The Form component is a wrapper for the react-hook-form
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
                 <FormField 

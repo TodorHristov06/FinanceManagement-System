@@ -1,14 +1,14 @@
 "use client" // Mark this component to be rendered on the client side
 
-import { Button } from "@/components/ui/button"; // Import Button component from UI library
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"; // Import dropdown menu components
-import { useDeleteAccount } from "@/features/accounts/api/use-delete-account"; // Import hook to handle account deletion
-import { useOpenAccount } from "@/features/accounts/hooks/use-open-account"; // Import hook to handle opening an account
-import { Edit, MoreHorizontal, Trash } from "lucide-react"; // Import icons for edit, menu, and trash actions
-import { useConfirm } from "@/hooks/use-confirm"; // Import custom hook for confirmation dialogs
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useDeleteAccount } from "@/features/accounts/api/use-delete-account";
+import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { useConfirm } from "@/hooks/use-confirm";
 
 type Props = {
-    id: string // Define type for the component's props, specifically the account ID
+    id: string // Account ID passed as a prop
 }
 export const Actions = ({id}: Props) => {
     const[ConfirmDialog, confirm] = useConfirm( "Are you sure?", "You are about to delete this transaction."); // Use confirmation dialog for delete action
@@ -20,7 +20,7 @@ export const Actions = ({id}: Props) => {
         const ok = await confirm(); // Wait for confirmation dialog result
 
         if (ok) {
-            deleteMutation.mutate(); // Trigger delete mutation if confirmed
+            deleteMutation.mutate();// Delete account if confirmed
         }
     }
 

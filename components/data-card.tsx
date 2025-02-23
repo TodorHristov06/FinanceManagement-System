@@ -4,6 +4,7 @@ import { IconType } from "react-icons/lib";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CountUp} from "@/components/count-up";
 
+// Define the styles for the box using class-variance-authority (cva)
 const boxVariant = cva(
     " shrink-0 rounded-md p-3",
     {
@@ -21,6 +22,7 @@ const boxVariant = cva(
     }
 )
 
+// Define the styles for the icon
 const iconVariant = cva(
     "size-6",
     {
@@ -41,6 +43,7 @@ const iconVariant = cva(
 type BoxVariants = VariantProps<typeof boxVariant>;
 type IconVariants = VariantProps<typeof iconVariant>;
 
+// Define the props for the DataCard component
 interface DataCardProps extends BoxVariants, IconVariants {
     icon: IconType;
     title: string;
@@ -49,6 +52,7 @@ interface DataCardProps extends BoxVariants, IconVariants {
     percentageChange?: number;
     
 }
+// DataCard component renders a card with a title, value, percentage change, and an icon
 export const DataCard = ({
     icon: Icon,
     title,

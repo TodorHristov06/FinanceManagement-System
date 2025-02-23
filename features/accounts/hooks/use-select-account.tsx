@@ -8,13 +8,17 @@ import { Dialog, DialogContent, DialogDescription ,DialogHeader, DialogTitle, Di
 import { Select } from "@/components/select";
 
 
-export const useSelectAccount = (): [() => JSX.Element, () => 
-Promise<unknown>] => {
-    const accountQuery = useGetAccounts();
-    const accountMutation = useCreateAccount();
+// Custom hook for selecting an account or creating a new one
+export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] => {
+    const accountQuery = useGetAccounts(); // Fetching accounts
+    const accountMutation = useCreateAccount(); // Hook to create a new account
+
+    // Function to handle account creation
     const onCreateAccount = (name: string) => accountMutation.mutate({
         name
     });
+
+    // Preparing account options for the select dropdown
     const accountOptions = (accountQuery.data ?? []).map((account) => ({
         label: account.name,
         value: account.id
@@ -23,24 +27,32 @@ Promise<unknown>] => {
     const [promise, setPromise] = useState<{ 
         resolve: (value: string | undefined) => void 
     } | null>(null)
-    const selectValue = useRef<string>();
 
+    const selectValue = useRef<string>(); // Ref to store selected account ID
+
+    // Function to open the dialog and wait for user confirmation
     const confirm = () => new Promise((resolve, reject) => {
-        setPromise({resolve}); 
+        setPromise({resolve}); // Set the resolve function for promise
     })
+
+    // Close the dialog and clear promise
     const handleClose = () => {
         setPromise(null);
     };
+
+    // Confirm selection and resolve the promise with the selected account ID
     const handleConfirm = () => {
         promise?.resolve(selectValue.current); 
         handleClose(); 
     };
 
+    // Cancel selection and resolve the promise with undefined
     const handleCancel = () => {
         promise?.resolve(undefined); 
         handleClose(); 
     };
 
+    // Dialog component for account selection
     const ConfirmationDialog = () => (
         <Dialog open={promise !== null}>
             <DialogContent>

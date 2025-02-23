@@ -1,10 +1,10 @@
 // Importing necessary libraries and components
-import { useNewCategory } from "@/features/categories/hooks/use-new-category";  // Custom hook to manage the opening of the New Category sheet
-import { CategoryForm } from "@/features/categories/components/category-form";// The CategoryForm component for creating new categories
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";  // UI components for sheet layout
-import { insertCategorySchema } from "@/db/schema";  // Importing the schema for category data validation
-import { z } from "zod";  // For schema validation using Zod
-import { useCreateCategory } from "@/features/categories/api/use-create-category";  // Custom hook to handle category creation
+import { useNewCategory } from "@/features/categories/hooks/use-new-category";
+import { CategoryForm } from "@/features/categories/components/category-form";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { insertCategorySchema } from "@/db/schema";
+import { z } from "zod";
+import { useCreateCategory } from "@/features/categories/api/use-create-category";
 
 // Defining the form schema, picking only the 'name' field for validation
 const formSchema = insertCategorySchema.pick({
@@ -23,7 +23,7 @@ export const NewCategorySheet = () => {
     const onSubmit = (values: FormValues) => {
         mutation.mutate(values, {
             onSuccess: () => {
-                onClose(); // Close the sheet on successful category creation
+                onClose();
             }
         });
     };
@@ -39,11 +39,10 @@ export const NewCategorySheet = () => {
                         Create a new category to organize your transactions.    
                     </SheetDescription>
                 </SheetHeader>
-                 {/* The CategoryForm component used for category creation, passing necessary props */}
                 <CategoryForm 
-                    onSubmit={onSubmit}  // Handler for form submission
+                    onSubmit={onSubmit}
                     disabled={mutation.isPending}  // Disable form inputs if the mutation is pending
-                    defaultValues={{ name: "" }}  // Default values for the form (empty name field)
+                    defaultValues={{ name: "" }}
                 />
             </SheetContent>
         </Sheet> 

@@ -10,19 +10,23 @@ export const AccountFilter = () => {
     const router = useRouter();
     const pathname = usePathname();
 
+    // Retrieving query parameters (accountId, from, to) from the current URL
     const params = useSearchParams();
     const accountId = params.get("accountId") || "all"
     const from = params.get("from") || ""
     const to = params.get("to") || "";
 
+    // Fetching summary data (used for loading state)
     const {
         isLoading: isLoadingSummary,
     } = useGetSummary()
+    // Fetching accounts data for the dropdown
     const {
         data: accounts,
         isLoading: isLoadingAccounts,
     } = useGetAccounts()
 
+    // Handles selection change and updates the query parameters
     const onChange = (newValue: string) => {
         const query = {
             accountId: newValue,
@@ -30,6 +34,7 @@ export const AccountFilter = () => {
             to,
         }
 
+        // If "all" is selected, clear the accountId from the query
         if (newValue === "all") {
             query.accountId = "";
         }

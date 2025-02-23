@@ -1,7 +1,7 @@
-import { InferRequestType, InferResponseType } from "hono"; // Importing helpers for type inference
-import { useMutation, useQueryClient } from "@tanstack/react-query"; // Importing React Query hooks
-import { toast } from "sonner"; // Importing toast notifications
-import { client } from "@/lib/hono"; // Importing the Hono API client
+import { InferRequestType, InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { client } from "@/lib/hono";
 
 // Inferring the types for request and response from the Hono API endpoint
 type ResponseType = InferResponseType<typeof client.api.transactions["bulk-create"]["$post"]>;
@@ -9,24 +9,23 @@ type RequestType = InferRequestType<typeof client.api.transactions["bulk-create"
 
 // Custom hook for handling bulk create of transactions
 export const useBulkCreateTransactions = () => {
-    const queryClient = useQueryClient(); // React Query client for cache management
-    // Using the mutation hook to handle the creation
+    const queryClient = useQueryClient();
     const mutation = useMutation<
         ResponseType,
         Error,
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.transactions["bulk-create"]["$post"]({ json }); // Sending the API request
-            return await response.json(); // Parsing the response JSON
+            const response = await client.api.transactions["bulk-create"]["$post"]({ json });
+            return await response.json();
         }, 
         onSuccess: () => {
-            toast.success("Transactions created"); // Show success toast on creation
-            queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalidate the transactions query to refetch data
+            toast.success("Transactions created");
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
             queryClient.invalidateQueries({ queryKey: ["summary"] });
         },
         onError: () => {
-            toast.error("Failed to create transactions"); // Show error toast on failure
+            toast.error("Failed to create transactions");
         },
     })
 

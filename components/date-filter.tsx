@@ -13,26 +13,30 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger, PopoverClose } from "@/components/ui/popover"
 
 export const DateFilter = () => {
-    const router = useRouter();
-    const pathname = usePathname();
+    const router = useRouter(); // Access the Next.js router for programmatic navigation
+    const pathname = usePathname();  // Get the current URL path
 
     const params = useSearchParams();
     const accountId = params.get("accountId")
     const from = params.get("from") || ""
     const to = params.get("to") || "";
 
+    // Default date range (last 30 days)
     const defaultTo = new Date();
     const defaultFrom = subDays(defaultTo, 30);
 
+    // Initializing the state for the date range with the URL parameters or defaults
     const paramState = {
         from: from ? new Date(from) : defaultFrom,
         to: to ? new Date(to) : defaultTo,
     };
 
+    // State to store the selected date range
     const [date, setDate] = useState<DateRange | undefined>(
         paramState
     );
 
+    // Function to update the URL when a date range is selected
     const pushToUrl = (dateRange: DateRange | undefined) => {
         const query = {
             from: format(dateRange?.from || defaultFrom, "yyyy-MM-dd"),
@@ -40,6 +44,7 @@ export const DateFilter = () => {
             accountId
         }
 
+        // Create the URL string with the query parameters
         const url = qs.stringifyUrl({
             url: pathname,
             query,
@@ -48,6 +53,7 @@ export const DateFilter = () => {
         router.push(url);
     }
 
+    // Function to reset the date filter
     const onReset = () => {
         setDate(undefined);
         pushToUrl(undefined);
