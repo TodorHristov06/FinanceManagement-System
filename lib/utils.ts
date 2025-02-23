@@ -7,21 +7,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// Converts an amount from miliunits to base units (USD)
+// Converts an amount from miliunits to base units (EUR)
 export function convertAmountFromMiliunits(amount: number) {
   return amount / 1000;
 }
 
-// Converts an amount from base units (USD) to miliunits
+// Converts an amount from base units (EUR) to miliunits
 export function convertAmountToMiliunits(amount: number) {
   return Math.round(amount * 1000);
 }
 
-// Formats a numeric value into currency format (USD)
+// Formats a numeric value into currency format (EUR)
 export function formatCurrency(value: number) {
-  return Intl.NumberFormat("en-US", {
+  return Intl.NumberFormat("en-GB", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
     minimumFractionDigits: 2,
   }).format(value);
 }
