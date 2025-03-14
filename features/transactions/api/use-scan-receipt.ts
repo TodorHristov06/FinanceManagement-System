@@ -24,7 +24,7 @@ const convertToEUR = async (amount: number, fromCurrency: string): Promise<numbe
 
 export const scanReceipt = async (file: File) => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Convert file to base64
     const arrayBuffer = await file.arrayBuffer();
