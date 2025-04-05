@@ -1,24 +1,30 @@
+// features/work-calculator/hooks/use-work-calculator.ts
 import { useState } from "react";
 
 export const useWorkCalculator = () => {
   const [hourlyRate, setHourlyRate] = useState<number>(0);
-  const [hoursPerDay, setHoursPerDay] = useState<number>(8);
-  const [daysPerWeek, setDaysPerWeek] = useState<number>(5);
-  const [weeksPerMonth, setWeeksPerMonth] = useState<number>(4);
+  const [workHours, setWorkHours] = useState<number>(8);
+  const [workDays, setWorkDays] = useState<number>(5);
+  const [taxPercentage, setTaxPercentage] = useState<number>(30);
 
-  const calculateMonthlyEarnings = () => {
-    return hourlyRate * hoursPerDay * daysPerWeek * weeksPerMonth;
-  };
+  const monthlyEarnings = hourlyRate * workHours * workDays * 4; // 4 weeks per month
+  const yearlyEarnings = monthlyEarnings * 12;
+  
+  const afterTaxMonthly = monthlyEarnings * (1 - taxPercentage / 100);
+  const afterTaxYearly = yearlyEarnings * (1 - taxPercentage / 100);
 
   return {
     hourlyRate,
     setHourlyRate,
-    hoursPerDay,
-    setHoursPerDay,
-    daysPerWeek,
-    setDaysPerWeek,
-    weeksPerMonth,
-    setWeeksPerMonth,
-    monthlyEarnings: calculateMonthlyEarnings(),
+    workHours,
+    setWorkHours,
+    workDays,
+    setWorkDays,
+    taxPercentage,
+    setTaxPercentage,
+    monthlyEarnings,
+    yearlyEarnings,
+    afterTaxMonthly,
+    afterTaxYearly,
   };
 };

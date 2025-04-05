@@ -11,35 +11,35 @@ export const WorkCalculatorForm = () => {
   const {
     hourlyRate,
     setHourlyRate,
-    hoursPerDay,
-    setHoursPerDay,
-    daysPerWeek,
-    setDaysPerWeek,
-    weeksPerMonth,
-    setWeeksPerMonth,
+    workHours,
+    setWorkHours,
+    workDays,
+    setWorkDays,
+    taxPercentage,
+    setTaxPercentage,
     monthlyEarnings,
+    yearlyEarnings,
+    afterTaxMonthly,
+    afterTaxYearly,
   } = useWorkCalculator();
 
   const handleInputChange = (setter: (value: number) => void, value: string) => {
-    // If input is empty, set to 0 but display empty string
     if (value === "") {
       setter(0);
     } else {
       const numValue = Number(value);
-      // Only update if it's a positive number
-      if (!isNaN(numValue) && numValue >= 0) {
-        setter(numValue);
+      if (!isNaN(numValue)) {
+        setter(Math.max(0, numValue)); // Ensure value is not negative
       }
     }
   };
 
   const formatInputValue = (value: number) => {
-    // Display empty string for 0 values
     return value === 0 ? "" : value.toString();
   };
 
   return (
-    <Card className="border-none drop-shadow-sm">
+    <Card className="border-none drop-shadow-sm max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="text-xl line-clamp-1">
           Work Calculator
@@ -53,30 +53,31 @@ export const WorkCalculatorForm = () => {
             type="number"
             value={formatInputValue(hourlyRate)}
             onChange={(e) => handleInputChange(setHourlyRate, e.target.value)}
-            placeholder="Enter your hourly rate"
+            placeholder="0"
             min="0"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="hoursPerDay">Hours per day</Label>
+          <Label htmlFor="workHours">Daily Hours</Label>
           <Input
-            id="hoursPerDay"
+            id="workHours"
             type="number"
-            value={formatInputValue(hoursPerDay)}
-            onChange={(e) => handleInputChange(setHoursPerDay, e.target.value)}
+            value={formatInputValue(workHours)}
+            onChange={(e) => handleInputChange(setWorkHours, e.target.value)}
             placeholder="8"
             min="0"
+            max="24"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="daysPerWeek">Days per week</Label>
+          <Label htmlFor="workDays">Days per Week</Label>
           <Input
-            id="daysPerWeek"
+            id="workDays"
             type="number"
-            value={formatInputValue(daysPerWeek)}
-            onChange={(e) => handleInputChange(setDaysPerWeek, e.target.value)}
+            value={formatInputValue(workDays)}
+            onChange={(e) => handleInputChange(setWorkDays, e.target.value)}
             placeholder="5"
             min="0"
             max="7"
@@ -84,23 +85,38 @@ export const WorkCalculatorForm = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="weeksPerMonth">Weeks per month</Label>
+          <Label htmlFor="taxPercentage">Tax Percentage (%)</Label>
           <Input
-            id="weeksPerMonth"
+            id="taxPercentage"
             type="number"
-            value={formatInputValue(weeksPerMonth)}
-            onChange={(e) => handleInputChange(setWeeksPerMonth, e.target.value)}
-            placeholder="4"
+            value={formatInputValue(taxPercentage)}
+            onChange={(e) => handleInputChange(setTaxPercentage, e.target.value)}
+            placeholder="30"
             min="0"
-            max="6"
+            max="100"
           />
         </div>
 
-        <div className="pt-4">
-          <h3 className="font-medium">Monthly Earnings:</h3>
-          <p className="text-2xl font-bold">
-            {monthlyEarnings > 0 ? formatCurrency(monthlyEarnings) : "€0.00"}
-          </p>
+        <div className="pt-6 space-y-4">
+          <div>
+            <h3 className="font-medium">Monthly Earnings:</h3>
+            <p className="text-xl font-bold">
+              {formatCurrency(monthlyEarnings)}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              After tax: {formatCurrency(afterTaxMonthly)}
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-medium">Yearly Earnings:</h3>
+            <p className="text-xl font-bold">
+              {formatCurrency(yearlyEarnings)}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              After tax: {formatCurrency(afterTaxYearly)}
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
