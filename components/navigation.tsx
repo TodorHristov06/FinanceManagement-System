@@ -26,6 +26,10 @@ const routes = [
         href: "/categories",
         label: "Categories",
     },
+    {
+        href: "/work-calculator",
+        label: "Work Calculator",
+    }
     // {
     //     href: "/settings",
     //     label: "Settings",
