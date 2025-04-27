@@ -22,7 +22,13 @@ type ReceiptType = {
   transactionId?: string;
 };
 
-export const ReceiptStorage = ({ transactionId }: { transactionId?: string }) => {
+export const ReceiptStorage = ({ 
+  transactionId,
+  onSelectReceipt
+}: { 
+  transactionId?: string;
+  onSelectReceipt?: (receipt: ReceiptType) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<ReceiptType | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -138,16 +144,29 @@ export const ReceiptStorage = ({ transactionId }: { transactionId?: string }) =>
     deleteMutation.mutate(id);
   };
 
+  const handleSelectReceipt = (receipt: ReceiptType) => {
+    if (onSelectReceipt) {
+      onSelectReceipt(receipt);
+      setIsOpen(false);
+    } else {
+      setSelectedReceipt(receipt);
+    }
+  };
+
   return (
     <>
       <Button
+        type="button" // Prevent form submission
         size="sm"
         variant="outline"
         className="w-full lg:w-auto"
-        onClick={() => setIsOpen(true)}
+        onClick={(e) => {
+          e.preventDefault(); // Prevent form submission
+          setIsOpen(true);
+        }}
       >
         <Receipt className="size-4 mr-2"/>
-        Receipt Storage
+        Select Receipt
       </Button>
 
       <input
@@ -190,7 +209,7 @@ export const ReceiptStorage = ({ transactionId }: { transactionId?: string }) =>
                       className={`p-2 border rounded cursor-pointer hover:bg-accent ${
                         selectedReceipt?.id === receipt.id ? 'bg-accent' : ''
                       }`}
-                      onClick={() => setSelectedReceipt(receipt)}
+                      onClick={() => handleSelectReceipt(receipt)}
                     >
                       <div className="flex justify-between items-center">
                         <span className="truncate">

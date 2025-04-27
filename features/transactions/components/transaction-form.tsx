@@ -133,36 +133,60 @@ export const TransactionForm = forwardRef<{
     }
   };
 
-  // Add this new function to handle button click
-  const handleUploadClick = () => {
-    document.getElementById('receipt-upload')?.click();
+  const handleSelectReceipt = async (receipt: any) => {
+    try {
+      // Convert base64 to file for upload
+      const response = await fetch(receipt.imageData);
+      const blob = await response.blob();
+      const file = new File([blob], receipt.fileName, { type: receipt.fileType });
+      
+      // Upload the receipt if handler provided
+      if (onReceiptUpload) {
+        onReceiptUpload(file);
+      }
+
+      // Scan the receipt using the imageData
+      const receiptData = await scanReceipt(receipt.imageData);
+      console.log("Scanned receipt data:", receiptData);
+      
+      if (receiptData) {
+        form.setValue('amount', receiptData.amount.toString());
+        form.setValue('date', new Date(receiptData.date));
+        form.setValue('payee', receiptData.payee || '');
+        form.setValue('notes', receiptData.note || '');
+
+        // Find matching category from options
+        const categoryOption = categoryOptions.find(cat => 
+          cat.label.toLowerCase() === receiptData.category?.toLowerCase()
+        );
+        if (categoryOption) {
+          form.setValue('categoryId', categoryOption.value);
+        }
+      }
+    } catch (error) {
+      console.error('Error processing receipt:', error);
+    }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
-        {onReceiptUpload && (
-          <div className="flex justify-center">
-            <Button 
-              type="button" 
-              variant="outline" 
-              disabled={disabled}
-              onClick={handleUploadClick}
-              className="w-full md:w-auto"
-            >
-              <Upload className="size-4 mr-2" />
-              Upload Receipt
-            </Button>
-            <input
-              id="receipt-upload"
-              type="file"
-              accept="image/png,image/jpeg,image/jpg"
-              className="hidden"
-              onChange={handleFileChange}
-              disabled={disabled}
-            />
-          </div>
-        )}
+        <FormField
+          name="receipts"
+          render={() => (
+            <FormItem>
+              <FormControl>
+                <ReceiptStorage 
+                  transactionId={id} 
+                  onSelectReceipt={(receipt) => {
+                    handleSelectReceipt(receipt);
+                    return false; // Prevent form submission
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         <FormField
           name="date"
@@ -295,18 +319,6 @@ export const TransactionForm = forwardRef<{
             Delete transaction
           </Button>
         )}
-
-        <FormField
-          name="receipts"
-          render={() => (
-            <FormItem>
-              <FormLabel>Receipts</FormLabel>
-              <FormControl>
-                <ReceiptStorage transactionId={id} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
       </form>
       
     </Form>
