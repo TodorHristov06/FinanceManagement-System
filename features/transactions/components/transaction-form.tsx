@@ -13,6 +13,7 @@ import { AmountInput } from "@/components/amount-input";
 import { convertAmountToMiliunits } from "@/lib/utils";
 import { forwardRef, useImperativeHandle } from "react";
 import { scanReceipt } from "../api/use-scan-receipt";
+import { ReceiptStorage } from "@/components/receipt-storage";
 
 const formSchema = z.object({
   date: z.coerce.date(),
@@ -104,9 +105,14 @@ export const TransactionForm = forwardRef<{
     if (!file) return;
 
     try {
-      // Show loading state if needed
+      // Create FormData for upload
+      const formData = new FormData();
+      formData.append("file", file);
+      if (id) formData.append("transactionId", id);
+
+      // Scan receipt first
       const receiptData = await scanReceipt(file);
-      console.log("Scanned receipt data handledelete:", receiptData); // Log the scanned data
+      console.log("Scanned receipt data:", receiptData);
       
       if (receiptData) {
         prefillForm({
@@ -118,13 +124,12 @@ export const TransactionForm = forwardRef<{
         });
       }
 
-      // Call the original onReceiptUpload if provided
+      // Call onReceiptUpload with FormData if provided
       if (onReceiptUpload) {
         onReceiptUpload(file);
       }
     } catch (error) {
       console.error('Error processing receipt:', error);
-      // Handle error (show toast notification, etc.)
     }
   };
 
@@ -290,7 +295,20 @@ export const TransactionForm = forwardRef<{
             Delete transaction
           </Button>
         )}
+
+        <FormField
+          name="receipts"
+          render={() => (
+            <FormItem>
+              <FormLabel>Receipts</FormLabel>
+              <FormControl>
+                <ReceiptStorage transactionId={id} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
       </form>
+      
     </Form>
   );
 });
