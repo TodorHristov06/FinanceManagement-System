@@ -66,3 +66,24 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 export const insertTransactionSchema = createInsertSchema(transactions, {
     date: z.coerce.date(),
 })
+
+export const receipts = pgTable("receipts", {
+    id: text("id").primaryKey(),
+    userId: text("user_id").notNull(),
+    imageUrl: text("image_url").notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+    transactionId: text("transaction_id").references(() => transactions.id, { onDelete: "set null" }),
+});
+
+export const receiptsRelations = relations(receipts, ({ one }) => ({
+    user: one(accounts, {
+        fields: [receipts.userId],
+        references: [accounts.userId],
+    }),
+    transaction: one(transactions, {
+        fields: [receipts.transactionId],
+        references: [transactions.id],
+    }),
+}));
+
+export const insertReceiptSchema = createInsertSchema(receipts);
