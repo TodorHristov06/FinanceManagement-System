@@ -31,6 +31,7 @@ export const ReceiptStorage = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<ReceiptType | null>(null);
+  const [lastClickTime, setLastClickTime] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const { userId } = useAuth();
@@ -145,12 +146,19 @@ export const ReceiptStorage = ({
   };
 
   const handleSelectReceipt = (receipt: ReceiptType) => {
-    if (onSelectReceipt) {
-      onSelectReceipt(receipt);
-      setIsOpen(false);
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastClickTime;
+    
+    if (timeDiff < 300) { // Double click threshold of 300ms
+      if (onSelectReceipt) {
+        onSelectReceipt(receipt);
+        setIsOpen(false);
+      }
     } else {
       setSelectedReceipt(receipt);
     }
+    
+    setLastClickTime(currentTime);
   };
 
   return (
@@ -209,7 +217,10 @@ export const ReceiptStorage = ({
                       className={`p-2 border rounded cursor-pointer hover:bg-accent ${
                         selectedReceipt?.id === receipt.id ? 'bg-accent' : ''
                       }`}
-                      onClick={() => handleSelectReceipt(receipt)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSelectReceipt(receipt);
+                      }}
                     >
                       <div className="flex justify-between items-center">
                         <span className="truncate">
