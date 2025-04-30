@@ -197,12 +197,12 @@ export const ReceiptStorage = ({
             <div className="w-1/4 border-r overflow-y-auto">
               <Button
                 variant="outline"
-                className="w-full mb-4"
+                className="w-full mb-4 px-4"
                 onClick={handleUploadClick}
                 disabled={uploadMutation.isPending}
               >
-                <Upload className="size-4 mr-2"/>
-                {uploadMutation.isPending ? "Uploading..." : "Upload Receipts"}
+                <Upload className="size-4 mr-2 flex-shrink-0"/>
+                {uploadMutation.isPending ? "Uploading..." : "Upload"}
               </Button>
               
               {isLoading ? (
