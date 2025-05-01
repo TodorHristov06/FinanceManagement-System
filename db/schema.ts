@@ -66,3 +66,16 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 export const insertTransactionSchema = createInsertSchema(transactions, {
     date: z.coerce.date(),
 })
+
+export const receipts = pgTable("receipts", {
+    id: text("id").primaryKey(),
+    userId: text("user_id").notNull(),
+    transactionId: text("transaction_id").references(() => transactions.id, {
+      onDelete: "set null"
+    }),
+    imageData: text("image_data").notNull(), // Base64 encoded image
+    fileName: text("file_name").notNull(),
+    fileType: text("file_type").notNull(),
+    fileSize: integer("file_size").notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  });

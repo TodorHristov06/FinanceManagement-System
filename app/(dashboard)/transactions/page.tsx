@@ -16,6 +16,7 @@ import { ImportCard } from "./import-card";
 import { transactions as transactionsSchema } from "@/db/schema";
 import { toast } from "sonner";
 import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
+import { ReceiptStorage } from "@/components/receipt-storage";
 
 enum VARIANTS {
     LIST = "LIST", // Display transaction list
@@ -126,6 +127,7 @@ const TransactionsPage = () => {
                             <Plus className="size-4 mr-2"/>
                             Add new
                         </Button>
+                        <ReceiptStorage />
                         <UploadButton onUpload={onUpload} />
                     </div>
                 </CardHeader>
